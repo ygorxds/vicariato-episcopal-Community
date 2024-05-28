@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import HomeView from '../views/HomeView.vue'
 import UserLogin from '../views/Login.vue';
 import UserDashboard from '../views/Dashboard.vue';
+import UserReport from '../views/ReportView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -18,6 +19,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboard',
     name: 'UserDashboard',
     component: UserDashboard
+  },
+  {
+    path: '/report',
+    name: 'UserReport',
+    component: UserReport
   }
 ];
 

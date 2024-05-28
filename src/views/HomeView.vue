@@ -3,13 +3,12 @@
     <img src="https://arqrio.org.br/wp-content/uploads/2021/01/logo.png" alt="Logo" class="logo">
     <ul>
       <li><a href="/">Inicio</a></li>
-      <li><a href="/">Sobre</a></li>
-      <li><a href="/">Faça parte da comunidade</a></li>
+      <li><a href="https://discord.gg/N5v4kCAA">Faça parte da comunidade</a></li>
       <li><a href="https://arqrio.org.br/category/noticias/">Notícias</a></li>
       <li><a href="https://arqrio.org.br/agenda/">Eventos</a></li>
       <li><a href="https://arqrio.org.br/vicariatos/">Vicariatos</a></li>
       <li><a href="https://arqrio.org.br/contatos/">Contatos</a></li>
-      <li> <router-link to="jmn/login">
+      <li> <router-link to="/login">
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
     <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
   </svg>
@@ -137,7 +136,7 @@ box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Sombra para separar do conteúdo *
 
 <script setup lang="ts">
 import { defineComponent } from 'vue';
-import womanImg from "@/assets/woman.svg";
+import womanImg from "../assets/woman.svg";
 
  defineComponent({
     name: 'userHomePage'
