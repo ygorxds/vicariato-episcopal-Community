@@ -1,15 +1,24 @@
 <template>
+<div id="filter">
+    
+  </div>
+<h1></h1>
     <div>
-      <h1>Dashboard</h1>
-      <p>Welcome to your dashboard.</p>
+      <SidebarMenu />
     </div>
   </template>
   
   <script lang="ts">
   import { defineComponent } from 'vue';
+  import SidebarMenu from '../components/SidebarMenu.vue'
+
+
   
   export default defineComponent({
-    name: 'UserDashboard'
+    name: 'UserDashboard',
+    components: {
+    SidebarMenu
+  }
   });
   </script>
   
