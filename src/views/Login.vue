@@ -2,13 +2,17 @@
   <div class="login-container">
     <div class="login-form">
       <img src="@/assets/logoLogin.png" alt="Vicariato Barra" class="logo">
-      <h1>Bem Vindo!</h1>
+      <div class="header">
+        <h1>Bem Vindo!</h1>
+        <h3>Faça Login</h3>
+      </div>
       <input type="text" placeholder="E-mail" v-model="email" />
       <input type="password" placeholder="Senha" v-model="password" />
-      <a href="/" class="forgot-password">Esqueci minha senha</a>
-      <button @click="login">Entrar</button>
-      <p class="register">ou</p>
-      <a href="/" class="register-link">Cadastre-se aqui</a>
+        <a href="/" class="forgot-password">Esqueci minha senha</a>
+      <div class="actions">
+        <button @click="login">Entrar</button>
+      </div>
+      <p class="register">ou <a href="/" class="register-link">Cadastre-se aqui</a></p>
     </div>
     <div class="login-image">
       <img src="https://images.pexels.com/photos/267559/pexels-photo-267559.jpeg" alt="Bible Image" />
@@ -56,11 +60,21 @@ export default defineComponent({
   width: 50%;
   padding: 2rem;
   box-sizing: border-box;
+  color: #333; /* Example color */
+  font-family: Arial, sans-serif; /* Example font */
 }
 
 .logo {
-  width: 250px;
+  width: 300px;
   margin-bottom: 2rem;
+}
+h3 {
+  margin-left: 10px
+}
+.header {
+  display: flex;
+  justify-content: left;
+  align-items: center;
 }
 
 input[type="text"],
@@ -69,25 +83,43 @@ input[type="password"] {
   padding: 8px;
   margin: 10px 0;
   box-sizing: border-box;
+  border-radius: 5px;
+  color: #555;
+  text-decoration-color: #555;
+  border-color: #eeeeee;
 }
 
-.forgot-password, .register-link {
-  display: block;
-  margin-top: 10px;
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forgot-password {
+  color: #555;
+  text-decoration: none;
+  align-items:
 }
 
 button {
-  width: 100%;
+  margin-top: 10px;
   padding: 10px;
   background-color: red;
   color: white;
   border: none;
   cursor: pointer;
+  width: 1000px;
+  border-radius: 5px;
 }
 
 .register {
-  text-align: center;
+  text-align: left;
   margin-top: 20px;
+}
+
+.register-link {
+  color: rgb(255, 0, 0); /* Adjust as needed */
+  text-decoration: none;
 }
 
 .login-image {
@@ -101,3 +133,4 @@ button {
   height: auto;
 }
 </style>
+
