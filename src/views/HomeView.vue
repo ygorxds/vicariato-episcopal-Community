@@ -121,6 +121,7 @@ svg {
   height: auto;
   /* Altura automática baseada na largura */
   margin-left: 150px;
+  margin-top: 100px;
 }
 
 p {
