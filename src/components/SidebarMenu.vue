@@ -20,7 +20,7 @@
   
   <script>
   export default {
-    name: 'SidebarMenu'
+    name: 'SidebarMenu',
   }
   </script>
   
@@ -29,7 +29,6 @@
     width: 100px;
     height: 100vh;
     background-color: #dddddd;
-    border-right: 2px solid #4a4a4a;
     display: flex;
     flex-direction: column;
     align-items: center;

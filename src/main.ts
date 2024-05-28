@@ -1,19 +1,25 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
-import router from './router'
-import store from './store'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHome, faChartBar } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import './registerServiceWorker';
 
-// Adiciona os ícones à biblioteca FontAwesome
-library.add(faHome, faChartBar)
+// Importações do FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHome, faChartBar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-const app = createApp(App)
+// Adicionando ícones à biblioteca FontAwesome
+library.add(faHome, faChartBar, faUser);
 
-// Registra o componente FontAwesome globalmente
-app.component('font-awesome-icon', FontAwesomeIcon)
+const app = createApp(App);
 
-// Uso do Vuex e Vue Router
-app.use(store).use(router).mount('#app')
+// Registrando o componente FontAwesomeIcon globalmente
+app.component('font-awesome-icon', FontAwesomeIcon);
+
+// Adicionando Vuex e Vue Router
+app.use(store);
+app.use(router);
+
+// Montando a aplicação no elemento #app
+app.mount('#app');
