@@ -6,11 +6,11 @@ import './registerServiceWorker';
 
 // Importações do FontAwesome
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faHome, faChartBar, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faChartBar, faUser , faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 // Adicionando ícones à biblioteca FontAwesome
-library.add(faHome, faChartBar, faUser);
+library.add(faHome, faChartBar, faUser, faPlus);
 
 const app = createApp(App);
 

@@ -14,6 +14,12 @@
             <span>Relatórios</span>
           </router-link>
         </li>
+        <li class="menu-item">
+          <router-link to="/" class="menu-link">
+            <font-awesome-icon :icon="['fas', 'plus']" class="icon"/>
+            <span>Cadastrar Mesc</span>
+          </router-link>
+        </li>
       </ul>
     </div>
   </template>
