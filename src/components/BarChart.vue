@@ -1,5 +1,6 @@
 <template>
   <div ref="canvasWrapper">
+    <h1 style="color: #777777;"> Quantidade de Mescs por idade e gênero</h1>
     <canvas ref="barChartCanvas"></canvas>
   </div>
 </template>

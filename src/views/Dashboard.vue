@@ -3,13 +3,12 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
+      <DateFilter/>
       <div v-if="chartsLoaded" class="charts-container">
-
-        <!-- <PieChart />-->
         <BarChart /> 
       </div>
       <div v-else>
-        Loading charts or handle error...
+       Carregando Gráficos...
       </div>
     </div>
   </div>
@@ -19,16 +18,17 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
-import PieChart from '../components/PieChart.vue';
+import PieChart from '../components/PieHighlight.vue';
 import BarChart from '../components/BarChart.vue';
+import DateFilter from '../components/DateFilter.vue'
 
 export default defineComponent({
   name: 'UserDashboard',
   components: {
     SidebarMenu,
     UserHeader,
-    // PieChart,
-     BarChart
+    BarChart,
+    DateFilter
   },
   setup() {
     const chartsLoaded = ref(false);
@@ -77,13 +77,15 @@ export default defineComponent({
 
 .charts-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: space-around;
-  flex-wrap: wrap;
-  background-color: #ffffff; /* Light gray background for charts */
+  background-color: #ffffff; /* White background for charts */
   padding: 20px;
   border-radius: 10px;
   width: 500px;
-  height: 300px;
+  height: auto; /* Auto to accommodate varying content sizes */
+  max-height: 1000px; /* Limit height to avoid overflow */
   margin-top: 15px;
   margin-right: 15px;
   margin-left: 15px;
