@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import UserLogin from '../views/Login.vue';
 import UserDashboard from '../views/Dashboard.vue';
 import UserReport from '../views/ReportView.vue';
+import AddMesc from '../views/AddMesc.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/report',
     name: 'UserReport',
     component: UserReport
+  },
+  {
+    path: '/add-mesc',
+    name: 'AddMesc',
+    component: AddMesc
   }
 ];
 

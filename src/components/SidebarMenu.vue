@@ -15,7 +15,7 @@
           </router-link>
         </li>
         <li class="menu-item">
-          <router-link to="/" class="menu-link">
+          <router-link to="/add-mesc" class="menu-link">
             <font-awesome-icon :icon="['fas', 'plus']" class="icon"/>
             <span>Cadastrar Mesc</span>
           </router-link>
