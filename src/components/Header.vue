@@ -12,7 +12,7 @@
     </div>
     <!-- Dropdown que aparece baseado no estado isDropdownVisible -->
     <div v-if="isDropdownVisible" class="dropdown">
-  <a href="/profile">
+  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
     <font-awesome-icon :icon="['fas', 'user']" /> Ver perfil
   </a>
   <a href="/">
