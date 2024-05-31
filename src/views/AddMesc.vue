@@ -235,7 +235,7 @@ export default defineComponent({
         };
 
         const fetchAddress = () => {
-            // Implemente a busca do endereço a partir do CEP
+            // Implementar a busca do endereço a partir do CEP dps
         };
 
         const handleSubmit = () => {
@@ -276,7 +276,6 @@ export default defineComponent({
 .user-header {
     width: 100%;
     background-color: #fff;
-    /* Adicione mais estilos conforme necessário */
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

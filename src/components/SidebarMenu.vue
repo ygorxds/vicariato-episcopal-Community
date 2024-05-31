@@ -20,6 +20,12 @@
             <span>Cadastrar Mesc</span>
           </router-link>
         </li>
+        <li class="menu-item">
+          <router-link to="/list-mesc" class="menu-link">
+            <font-awesome-icon :icon="['fas', 'user']" class="icon"/>
+            <span>Listar Mescs</span>
+          </router-link>
+        </li>
       </ul>
     </div>
   </template>
