@@ -19,7 +19,7 @@
             <PieChart v-if="selectedChart === 'gender'" />
           </div>
           <div v-else>
-            Loading charts or handle error...
+            Carregando...
           </div>
         </div>
         <div v-else>
@@ -88,14 +88,15 @@ export default defineComponent({
 <style scoped>
 .dashboard-container {
   display: flex;
-  width: 100%;
-  height: 100vh;
+  width: auto;
+  height: auto;
 }
 
 .content-area {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  min-height: 100vh; /* Garante que o mínimo seja a altura da tela, mas pode expandir */
 }
 
 .selector-container {
