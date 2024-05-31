@@ -5,22 +5,28 @@
       <UserHeader />
       <DateFilter/>
       <div v-if="chartsLoaded" class="charts-container">
-        <BarChart /> 
+        <div class="chart pie-chart">
+          <PieChart />
+          
+        </div>
+        <div class="chart bar-chart">
+          <BarChart />
+        </div>
       </div>
       <div v-else>
-       Carregando Gráficos...
+        Carregando Gráficos...
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
-import PieChart from '../components/PieHighlight.vue';
+import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
-import DateFilter from '../components/DateFilter.vue'
+import DateFilter from '../components/DateFilter.vue';
 
 export default defineComponent({
   name: 'UserDashboard',
@@ -28,15 +34,16 @@ export default defineComponent({
     SidebarMenu,
     UserHeader,
     BarChart,
-    DateFilter
+    DateFilter,
+    PieChart
   },
   setup() {
     const chartsLoaded = ref(false);
 
-    // Function to simulate chart data loading
+    // Função para simular o carregamento de dados dos gráficos
     const loadCharts = async () => {
       try {
-        // Simulate fetching data with a delay
+        // Simulando a busca de dados com um delay
         await new Promise(resolve => setTimeout(resolve, 1000));
         chartsLoaded.value = true;
       } catch (error) {
@@ -45,8 +52,20 @@ export default defineComponent({
       }
     };
 
+    // Função chamada quando a página é redimensionada
+    const onResize = async () => {
+      console.log("Redimensionando a página, recarregando os gráficos...");
+      chartsLoaded.value = false; // primeiro, definir como não carregado
+      await loadCharts(); // então recarregar os gráficos
+    };
+
     onMounted(() => {
       loadCharts();
+      window.addEventListener('resize', onResize);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', onResize);
     });
 
     return {
@@ -56,6 +75,7 @@ export default defineComponent({
 });
 </script>
 
+
 <style>
 .dashboard-container {
   display: flex;
@@ -64,8 +84,8 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 200px; /* Adjust the width as needed */
-  background-color: #f4f4f4; /* Sidebar background color */
+  width: 200px; /* Ajuste a largura conforme necessário */
+  background-color: #f4f4f4; /* Cor de fundo da barra lateral */
 }
 
 .content-area {
@@ -77,17 +97,22 @@ export default defineComponent({
 
 .charts-container {
   display: flex;
-  flex-direction: column;
+  flex-grow: 1;
+  padding: 15px;
+  gap: 10px; /* Adiciona um espaço entre os gráficos */
+}
+
+.chart {
+  flex: 1;
+  display: flex;
   align-items: center;
-  justify-content: space-around;
-  background-color: #ffffff; /* White background for charts */
-  padding: 20px;
+  justify-content: center;
+  background-color: #ffffff; /* Fundo branco para cada gráfico */
   border-radius: 10px;
-  width: 500px;
-  height: auto; /* Auto to accommodate varying content sizes */
-  max-height: 1000px; /* Limit height to avoid overflow */
-  margin-top: 15px;
-  margin-right: 15px;
-  margin-left: 15px;
+  padding: 20px;
+}
+
+.bar-chart, .pie-chart {
+  width: 100%; /* Assegura que cada gráfico ocupe toda a largura do seu contêiner */
 }
 </style>

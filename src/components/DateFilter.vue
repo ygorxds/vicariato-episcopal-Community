@@ -30,7 +30,8 @@ export default defineComponent({
       'Paróquia São José Operário',
       'Paróquia Santa Luzia',
       'Paróquia Santo Antônio de Pádua',
-      'Paróquia São Judas Tadeu'
+      'Paróquia São Judas Tadeu',
+      'Todas'
       // Adicione mais igrejas conforme necessário
     ];
 

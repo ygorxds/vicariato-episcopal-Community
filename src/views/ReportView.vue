@@ -8,14 +8,15 @@
         <label for="chartType"><b>Selecione o tipo de análise:</b></label>
         <select class="selectChoose" v-model="selectedChart" @change="loadChart">
           <option value="">Nenhum</option>
+          <option value="gender">Gênero</option>
           <option value="ageGenderMesc">Qtd. de Mesc X Idade X Gênero</option>
-          <!-- Adicione outras opções de análise aqui -->
         </select>
       </div>
       <div class="chart-display-area">
         <div v-if="selectedChart">
           <div v-if="chartsLoaded" class="charts-container">
-            <BarChart /> <!-- Aqui você pode substituir pelo gráfico desejado -->
+            <BarChart v-if="selectedChart === 'ageGenderMesc'" />
+            <PieChart v-if="selectedChart === 'gender'" />
           </div>
           <div v-else>
             Loading charts or handle error...
@@ -35,7 +36,8 @@ import { defineComponent, ref, onMounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 import BarChart from '../components/BarChart.vue';
-import DateFilter from '../components/DateFilter.vue'
+import PieChart from '../components/PieChart.vue';
+import DateFilter from '../components/DateFilter.vue';
 import { jsPDF } from 'jspdf';
 
 export default defineComponent({
@@ -44,8 +46,8 @@ export default defineComponent({
     SidebarMenu,
     UserHeader,
     BarChart,
+    PieChart, // PieChart foi adicionado aos componentes
     DateFilter
-    
   },
   setup() {
     const chartsLoaded = ref(false);
@@ -57,7 +59,7 @@ export default defineComponent({
         await new Promise(resolve => setTimeout(resolve, 1000));
         chartsLoaded.value = true;
       } catch (error) {
-        console.error("Failed to load chart:", error);
+                console.error("Failed to load chart:", error);
         chartsLoaded.value = false;
       }
     };
@@ -103,19 +105,24 @@ export default defineComponent({
 }
 
 .chart-display-area {
+  width: 100%;
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px 0; /* Ajuste conforme necessário para não afetar outros componentes */
 }
 
 .charts-container {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
-  width: 1000px; /* Ajuste a largura do gráfico aqui */
-  height: 400px; /* Ajuste a altura do gráfico aqui */
-  text-align: center;
+  width: 80%; /* Ajuste baseado na largura disponível */
+  max-width: 1000px; /* Largura máxima do contêiner */
+  height: auto; /* Auto para acomodar o tamanho do gráfico */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .download-report {
@@ -129,14 +136,16 @@ export default defineComponent({
   border-radius: 5px;
 }
 
-.selectChoose{
+.selectChoose {
   height: 50px;
   width: 400px;
   border-radius: 20px;
   color: #777777;
-  background-color: #ffffff; /* White background for charts */
+  background-color: #ffffff;
   padding: 10px;
   border-color: #777777;
   margin-left: 8px;
 }
 </style>
+
+

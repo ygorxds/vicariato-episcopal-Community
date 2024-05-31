@@ -1,49 +1,31 @@
 <template>
-  <div>
-    <pie-chart :data="datacollection" :options="options"/>
+  <div ref="canvasWrapper">
+    <h1 style="color: #777777;">Distribuição por Gênero</h1>
+    <canvas ref="pieChartCanvas"></canvas>
   </div>
 </template>
 
 <script>
-import { Pie } from 'vue-chartjs'
+import Chart from 'chart.js';
 
 export default {
-  extends: Pie,
-  props: {
-    chartData: {
-      type: Array,
-      required: true,
-      default: () => [40, 20, 10]
-    },
-    chartLabels: {
-      type: Array,
-      required: true,
-      default: () => ["Masculino", "Feminino", "Outro"]
-    }
-  },
-  data() {
-    return {
+  name: 'PieChart',
+  mounted() {
+    const ctx = this.$refs.pieChartCanvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ["Masculino", "Feminino", "Outro"],
+        datasets: [{
+          backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
+          data: [120, 90, 30] // Dados fictícios
+        }]
+      },
       options: {
         responsive: true,
         maintainAspectRatio: false
       }
-    };
-  },
-  computed: {
-    datacollection() {
-      return {
-        labels: this.chartLabels,
-        datasets: [
-          {
-            backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"],
-            data: this.chartData
-          }
-        ]
-      };
-    }
-  },
-  mounted() {
-    this.renderChart(this.datacollection, this.options)
+    });
   }
 }
 </script>
