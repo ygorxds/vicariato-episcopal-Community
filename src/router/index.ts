@@ -4,6 +4,8 @@ import UserLogin from '../views/Login.vue';
 import UserDashboard from '../views/Dashboard.vue';
 import UserReport from '../views/ReportView.vue';
 import AddMesc from '../views/AddMesc.vue'
+import ListMescs from '@/views/ListMescs.vue';
+import LoginProfile from '@/views/Profile.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,6 +32,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/add-mesc',
     name: 'AddMesc',
     component: AddMesc
+  },
+  {
+    path: '/list-mesc',
+    name: 'ListMesc',
+    component: ListMescs
+  },
+  {
+    path: '/profile',
+    name: 'LoginProfile',
+    component: LoginProfile
   }
 ];
 
