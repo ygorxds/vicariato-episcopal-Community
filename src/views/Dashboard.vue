@@ -3,14 +3,37 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
-      <DateFilter/>
+      <DateFilter />
       <div v-if="chartsLoaded" class="charts-container">
-        <div class="chart pie-chart">
+        <div class="chart">
           <PieChart />
-          
         </div>
-        <div class="chart bar-chart">
+        <div class="chart">
           <BarChart />
+        </div>
+        <div class="chart">
+          <SchoolDistribuetion />
+        </div>
+        <div class="chart">
+          <AgeDistributionChart />
+        </div>
+        <div class="chart">
+          <CityDistributionChart />
+        </div>
+        <div class="chart">
+          <EducationParticipationChart />
+        </div>
+        <div class="chart">
+          <MaritalStatusChart />
+        </div>
+        <div class="chart">
+          <PastoralParticipationChart />
+        </div>
+        <div class="chart">
+          <RegistrationOverTimeChart />
+        </div>
+        <div class="chart">
+          <StateDistributionChart />
         </div>
       </div>
       <div v-else>
@@ -27,6 +50,14 @@ import UserHeader from '../components/Header.vue';
 import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
 import DateFilter from '../components/DateFilter.vue';
+import SchoolDistribuetion from '../components/SchoolDistribuetion.vue';
+import AgeDistributionChart from '@/components/AgeDistributionChart.vue';
+import CityDistributionChart from '@/components/CityDistributionChart.vue';
+import EducationParticipationChart from '@/components/EducationParticipationChart.vue';
+import MaritalStatusChart from '@/components/MaritalStatusChart.vue';
+import PastoralParticipationChart from '@/components/PastoralParticipationChart.vue';
+import RegistrationOverTimeChart from '@/components/RegistrationOverTimeChart.vue';
+import StateDistributionChart from '@/components/StateDistributionChart.vue';
 
 export default defineComponent({
   name: 'UserDashboard',
@@ -35,7 +66,15 @@ export default defineComponent({
     UserHeader,
     BarChart,
     DateFilter,
-    PieChart
+    PieChart,
+    SchoolDistribuetion,
+    AgeDistributionChart,
+    CityDistributionChart,
+    EducationParticipationChart,
+    MaritalStatusChart,
+    PastoralParticipationChart,
+    RegistrationOverTimeChart,
+    StateDistributionChart
   },
   setup() {
     const chartsLoaded = ref(false);
@@ -75,7 +114,6 @@ export default defineComponent({
 });
 </script>
 
-
 <style>
 .dashboard-container {
   display: flex;
@@ -85,7 +123,8 @@ export default defineComponent({
 }
 
 .sidebar {
-  width: 200px; /* Ajuste a largura conforme necessário */
+  min-width: 100px;
+  width: 300px; /* Ajuste a largura conforme necessário */
   background-color: #f4f4f4; /* Cor de fundo da barra lateral */
 }
 
@@ -98,19 +137,21 @@ export default defineComponent({
 
 .charts-container {
   display: flex;
-  flex-grow: 1;
+  flex-wrap: wrap; /* Permite que os gráficos quebrem linha */
+  justify-content: space-between;
   padding: 15px;
-  gap: 10px; /* Adiciona um espaço entre os gráficos */
 }
 
 .chart {
-  flex: 1;
+  flex: 0 1 calc(50% - 50px); /* Cada gráfico ocupará 50% da largura menos os gaps */
+  margin-bottom: 20px; /* Espaçamento entre as linhas */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #ffffff; /* Fundo branco para cada gráfico */
   border-radius: 10px;
   padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .bar-chart, .pie-chart {

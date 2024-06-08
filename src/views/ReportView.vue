@@ -3,20 +3,36 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
-      <DateFilter/>
+      <DateFilter />
       <div class="selector-container">
         <label for="chartType"><b>Selecione o tipo de análise:</b></label>
         <select class="selectChoose" v-model="selectedChart" @change="loadChart">
           <option value="">Nenhum</option>
           <option value="gender">Gênero</option>
           <option value="ageGenderMesc">Qtd. de Mesc X Idade X Gênero</option>
+          <option value="education">Escolaridade</option>
+          <option value="age">Idade</option>
+          <option value="city">Município do RJ</option>
+          <option value="educationParticipation">Escolaridade e Participação</option>
+          <option value="maritalStatus">Estado Civil</option>
+          <option value="pastoralParticipation">Participação em Movimentos Pastorais</option>
+          <option value="registrationOverTime">Cadastro ao Longo do Tempo</option>
+          <option value="state">Estado (UF)</option>
         </select>
       </div>
       <div class="chart-display-area">
         <div v-if="selectedChart">
           <div v-if="chartsLoaded" class="charts-container">
-            <BarChart v-if="selectedChart === 'ageGenderMesc'" />
             <PieChart v-if="selectedChart === 'gender'" />
+            <BarChart v-if="selectedChart === 'ageGenderMesc'" />
+            <SchoolDistribuetion v-if="selectedChart === 'education'" />
+            <AgeDistributionChart v-if="selectedChart === 'age'" />
+            <CityDistributionChart v-if="selectedChart === 'city'" />
+            <EducationParticipationChart v-if="selectedChart === 'educationParticipation'" />
+            <MaritalStatusChart v-if="selectedChart === 'maritalStatus'" />
+            <PastoralParticipationChart v-if="selectedChart === 'pastoralParticipation'" />
+            <RegistrationOverTimeChart v-if="selectedChart === 'registrationOverTime'" />
+            <StateDistributionChart v-if="selectedChart === 'state'" />
           </div>
           <div v-else>
             Carregando...
@@ -35,9 +51,17 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
-import BarChart from '../components/BarChart.vue';
 import PieChart from '../components/PieChart.vue';
+import BarChart from '../components/BarChart.vue';
 import DateFilter from '../components/DateFilter.vue';
+import SchoolDistribuetion from '../components/SchoolDistribuetion.vue';
+import AgeDistributionChart from '@/components/AgeDistributionChart.vue';
+import CityDistributionChart from '@/components/CityDistributionChart.vue';
+import EducationParticipationChart from '@/components/EducationParticipationChart.vue';
+import MaritalStatusChart from '@/components/MaritalStatusChart.vue';
+import PastoralParticipationChart from '@/components/PastoralParticipationChart.vue';
+import RegistrationOverTimeChart from '@/components/RegistrationOverTimeChart.vue';
+import StateDistributionChart from '@/components/StateDistributionChart.vue';
 import { jsPDF } from 'jspdf';
 
 export default defineComponent({
@@ -45,9 +69,17 @@ export default defineComponent({
   components: {
     SidebarMenu,
     UserHeader,
+    PieChart,
     BarChart,
-    PieChart, // PieChart foi adicionado aos componentes
-    DateFilter
+    DateFilter,
+    SchoolDistribuetion,
+    AgeDistributionChart,
+    CityDistributionChart,
+    EducationParticipationChart,
+    MaritalStatusChart,
+    PastoralParticipationChart,
+    RegistrationOverTimeChart,
+    StateDistributionChart
   },
   setup() {
     const chartsLoaded = ref(false);
@@ -59,7 +91,7 @@ export default defineComponent({
         await new Promise(resolve => setTimeout(resolve, 1000));
         chartsLoaded.value = true;
       } catch (error) {
-                console.error("Failed to load chart:", error);
+        console.error("Failed to load chart:", error);
         chartsLoaded.value = false;
       }
     };
@@ -115,15 +147,27 @@ export default defineComponent({
 }
 
 .charts-container {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap; /* Permite que os gráficos quebrem linha */
+  justify-content: space-between;
   width: 80%; /* Ajuste baseado na largura disponível */
   max-width: 1000px; /* Largura máxima do contêiner */
   height: auto; /* Auto para acomodar o tamanho do gráfico */
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.chart {
+  flex: 0 1 calc(50% - 10px); /* Cada gráfico ocupará 50% da largura menos os gaps */
+  margin-bottom: 20px; /* Espaçamento entre as linhas */
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* Fundo branco para cada gráfico */
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .download-report {
@@ -148,5 +192,3 @@ export default defineComponent({
   margin-left: 8px;
 }
 </style>
-
-

@@ -1,3 +1,8 @@
+<!-- Gráfico de rosca de Quantidade de Mescs por idade e gênero 
+Desenvolvido por: Ygor Pereira
+05/06/2024 
+-->
+
 <template>
   <div ref="canvasWrapper">
     <h1 style="color: #777777;"> Quantidade de Mescs por idade e gênero</h1>
