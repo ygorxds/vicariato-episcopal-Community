@@ -17,7 +17,7 @@
       createEducationParticipationChart() {
         const ctx = this.$refs.educationParticipationChartCanvas.getContext('2d');
         new Chart(ctx, {
-          type: 'bar',
+          type: 'radar',
           data: {
             labels: ["Sem escolaridade", "Ensino Fundamental", "Ensino Médio", "Ensino Superior", "Pós-graduação"],
             datasets: [

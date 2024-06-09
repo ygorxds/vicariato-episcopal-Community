@@ -17,12 +17,12 @@
       createStateDistributionChart() {
         const ctx = this.$refs.stateDistributionChartCanvas.getContext('2d');
         new Chart(ctx, {
-          type: 'bar',
+          type: 'doughnut',
           data: {
-            labels: ["Estado 1", "Estado 2", "Estado 3", "Estado 4", "Estado 5"],
+            labels: ["Rio de Janeiro", "São Paulo", "Espirito Santo", "Minas Gerais", "Outros"],
             datasets: [{
               backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726", "#26A69A", "#AB47BC"],
-              data: [20, 30, 10, 25, 15] // Substitua pelos seus dados
+              data: [200, 30, 10, 25, 150] // Substitua pelos seus dados
             }]
           },
           options: {

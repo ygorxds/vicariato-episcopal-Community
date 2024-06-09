@@ -21,7 +21,7 @@
           data: {
             labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"],
             datasets: [{
-              label: "Total",
+              label: "Dados",
               borderColor: "#42A5F5",
               data: [10, 20, 30, 25, 35] // Substitua pelos seus dados
             }]

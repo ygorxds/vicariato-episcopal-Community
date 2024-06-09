@@ -15,9 +15,6 @@
           <SchoolDistribuetion />
         </div>
         <div class="chart">
-          <AgeDistributionChart />
-        </div>
-        <div class="chart">
           <CityDistributionChart />
         </div>
         <div class="chart">
@@ -68,7 +65,7 @@ export default defineComponent({
     DateFilter,
     PieChart,
     SchoolDistribuetion,
-    AgeDistributionChart,
+    // AgeDistributionChart,
     CityDistributionChart,
     EducationParticipationChart,
     MaritalStatusChart,

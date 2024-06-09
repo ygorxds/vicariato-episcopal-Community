@@ -17,7 +17,7 @@
       createEducationChart() {
         const ctx = this.$refs.educationChartCanvas.getContext('2d');
         new Chart(ctx, {
-          type: 'bar',
+          type: 'pie',
           data: {
             labels: ["Sem escolaridade", "Ensino Fundamental", "Ensino Médio", "Ensino Superior", "Pós-graduação"],
             datasets: [{

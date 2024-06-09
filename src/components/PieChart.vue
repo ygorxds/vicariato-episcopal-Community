@@ -13,7 +13,7 @@ export default {
   mounted() {
     const ctx = this.$refs.pieChartCanvas.getContext('2d');
     new Chart(ctx, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: ["Masculino", "Feminino", "Outro"],
         datasets: [{
