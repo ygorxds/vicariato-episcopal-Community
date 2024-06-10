@@ -8,11 +8,11 @@
       </div>
       <input type="text" placeholder="E-mail" v-model="email" />
       <input type="password" placeholder="Senha" v-model="password" />
-        <a href="/" class="forgot-password">Esqueci minha senha</a>
+        <a href="/" @click="menuNotification" class="forgot-password">Esqueci minha senha</a>
       <div class="actions">
         <button @click="login">Entrar</button>
       </div>
-      <p class="register">ou <a href="/" class="register-link">Cadastre-se aqui</a></p>
+      <p class="register">ou <a  @click="menuNotification" class="register-link">Cadastre-se aqui</a></p>
     </div>
     <div class="login-image">
       <img src="https://images.pexels.com/photos/267559/pexels-photo-267559.jpeg" alt="Bible Image" />
@@ -24,12 +24,17 @@
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+
 export default defineComponent({
   name: 'UserLogin',
   setup() {
     const email = ref('');
     const password = ref('');
     const router = useRouter();
+
+    const menuNotification = () =>{
+      alert("OPÇÃO NÃO DISPONIVEL NO MOMENTO. FALE COM O SUPORTE PARA ALTERAR SUA SENHA MANUALMENTE NO BANCO OU CRIAR A SUA CONTA")
+    };
 
     function login() {
       if (email.value === 'admin' && password.value === 'admin') {
@@ -38,11 +43,15 @@ export default defineComponent({
         alert('Credenciais incorretas!');
       }
     }
+    
+
+
 
     return {
       email,
       password,
-      login
+      login,
+      menuNotification
     };
   }
 });
