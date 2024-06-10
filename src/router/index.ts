@@ -41,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
     component: ListMescs
   },
   {
-    path: '/profile',
+    path: '/see-profile',
     name: 'LoginProfile',
     component: LoginProfile
   },
