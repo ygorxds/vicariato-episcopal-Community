@@ -6,6 +6,8 @@ import UserReport from '../views/ReportView.vue';
 import AddMesc from '../views/AddMesc.vue'
 import ListMescs from '@/views/ListMescs.vue';
 import LoginProfile from '@/views/Profile.vue';
+import EditMesc from '@/views/EditMescView.vue';
+import SeeMesc from '@/views/SeeMesc.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -42,6 +44,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile',
     name: 'LoginProfile',
     component: LoginProfile
+  },
+  {
+    path: '/edit-mesc',
+    name: 'EditMesc',
+    component: EditMesc
+  },
+  {
+    path: '/see-mesc',
+    name: 'SeeMesc',
+    component: SeeMesc
   }
 ];
 
