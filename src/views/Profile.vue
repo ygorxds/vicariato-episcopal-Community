@@ -1,147 +1,139 @@
 <template>
-    <div class="dashboard-container">
-      <SidebarMenu />
+  <div class="dashboard-container">
+    <SidebarMenu />
+    <div class="main-content">
+      <UserHeader />
       <div class="content-area">
-        <UserHeader />
-        <DateFilter />
-        <h1>I'm Batman</h1>
-        <img src="https://content.imageresizer.com/images/memes/Shocked-Batman-meme-1476d.jpg" alt="Shocked Batman" class="batman-image" />
-      
-        <button class="download-report" @click="downloadReport">Baixar Relatório</button>
+        <div class="profile-container">
+          <h1>Perfil do usuário</h1>
+          <div class="profile-card">
+            <img src="@/assets/boente.png" alt="User Image" class="profile-image" />
+            <div class="profile-details">
+              <p><strong>Nome:</strong> <span class="highlight">Alfredo Boente</span></p>
+              <p><strong>Idade:</strong> <span class="highlight">45 anos</span></p>
+              <p><strong>Gênero:</strong> <span class="highlight">Masculino</span></p>
+              <p><strong>Status:</strong> Coordenador</p>
+            </div>
+            <button class="update-button" @click="goToUpdateUSerPage">Atualizar meus dados</button>
+            <button style="margin-left: 10px;" class="update-button" @click="goToNewUserPage">+</button>
+            <button style="margin-left: 10px;" class="update-button" @click="goToDeleteMyProfile">Deletar minha conta</button>
+          </div>
+        </div>
       </div>
     </div>
-  </template>
-  
-  <script lang="ts">
-  import { defineComponent, ref, onMounted } from 'vue';
-  import SidebarMenu from '../components/SidebarMenu.vue';
-  import UserHeader from '../components/Header.vue';
-  import DateFilter from '../components/DateFilter.vue';
-  
-  import { jsPDF } from 'jspdf';
-  
-  export default defineComponent({
-    name: 'LoginProfile',
-    components: {
-      SidebarMenu,
-      UserHeader,
-      DateFilter
-    },
-    setup() {
-      const chartsLoaded = ref(false);
-      const selectedChart = ref('');
-  
-      const loadChart = async () => {
-        try {
-          // Simulate loading of chart data
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          chartsLoaded.value = true;
-        } catch (error) {
-          console.error("Failed to load chart:", error);
-          chartsLoaded.value = false;
-        }
-      };
-  
-      const downloadReport = () => {
-        const pdf = new jsPDF();
-        pdf.text("Relatório de Análise", 10, 10);
-        pdf.text("Aqui você pode colocar mais textos e dados", 10, 20);
-        pdf.save('Relatório.pdf');
-      };
-  
-      onMounted(() => {
-        loadChart();
-      });
-  
-      return {
-        chartsLoaded,
-        selectedChart,
-        loadChart,
-        downloadReport
-      };
-    }
-  });
-  </script>
-  
-  <style scoped>
-  .dashboard-container {
-    display: flex;
-    width: auto;
-    height: auto;
-  }
-  
-  .content-area {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Garante que o mínimo seja a altura da tela, mas pode expandir */
-  }
-  
-  .selector-container {
-    margin-top: 20px;
-    text-align: center;
-    color: #777777;
-  }
-  
-  .chart-display-area {
-    width: 100%;
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0; /* Ajuste conforme necessário para não afetar outros componentes */
-  }
-  
-  .charts-container {
-    display: flex;
-    flex-wrap: wrap; /* Permite que os gráficos quebrem linha */
-    justify-content: space-between;
-    width: 80%; /* Ajuste baseado na largura disponível */
-    max-width: 1000px; /* Largura máxima do contêiner */
-    height: auto; /* Auto para acomodar o tamanho do gráfico */
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .chart {
-    flex: 0 1 calc(50% - 10px); /* Cada gráfico ocupará 50% da largura menos os gaps */
-    margin-bottom: 20px; /* Espaçamento entre as linhas */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff; /* Fundo branco para cada gráfico */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .download-report {
-    cursor: pointer;
-    margin: 20px auto;
-    display: block;
-    padding: 10px 20px;
-    background-color: #820000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  .batman-image {
-  margin: 20px auto;
-  display: block;
-  max-width: 100%;
-  height: auto;
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+import SidebarMenu from '../components/SidebarMenu.vue';
+import UserHeader from '../components/Header.vue';
+
+export default defineComponent({
+  name: 'UserProfile',
+  components: {
+    SidebarMenu,
+    UserHeader
+  },
+  setup() {
+    const router = useRouter();
+
+    const goToNewUserPage = () => {
+      router.push('/new-user');
+    };
+    const goToUpdateUSerPage = () =>{
+      router.push('/update-user');
+
+    };
+    const goToDeleteMyProfile = () =>{
+      alert("OPÇÃO NÃO DISPONIVEL NO MOMENTO")
+
+    };
+
+    return {
+      goToNewUserPage,
+      goToUpdateUSerPage,
+      goToDeleteMyProfile
+    };
+  },
+});
+</script>
+
+<style scoped>
+.dashboard-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
 }
-  
-  .selectChoose {
-    height: 50px;
-    width: 400px;
-    border-radius: 20px;
-    color: #777777;
-    background-color: #ffffff;
-    padding: 10px;
-    border-color: #777777;
-    margin-left: 8px;
-  }
-  </style>
-  
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px; /* Adicionado para separar do header */
+}
+
+.profile-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.profile-details p {
+  margin: 10px 0;
+}
+
+.highlight {
+  color: red;
+}
+
+.update-button {
+  padding: 10px 20px;
+  background-color: #831302;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.update-button:hover {
+  background-color: #e61010;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+</style>

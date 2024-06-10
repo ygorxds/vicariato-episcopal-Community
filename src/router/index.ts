@@ -8,6 +8,8 @@ import ListMescs from '@/views/ListMescs.vue';
 import LoginProfile from '@/views/Profile.vue';
 import EditMesc from '@/views/EditMescView.vue';
 import SeeMesc from '@/views/SeeMesc.vue';
+import NewUser from '@/views/CreateUser.vue'
+import UpdateUser from '@/views/UpdateUserView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -54,7 +56,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/see-mesc',
     name: 'SeeMesc',
     component: SeeMesc
-  }
+  },
+  {
+    path: '/new-user',
+    name: 'NewUser',
+    component: NewUser
+  },
+  {
+    path: '/update-user',
+    name: 'UpdateUser',
+    component: UpdateUser
+  },
+
 ];
 
 const router = createRouter({
