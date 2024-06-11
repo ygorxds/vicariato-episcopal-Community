@@ -4,7 +4,6 @@
     <div class="content-area">
       <UserHeader />
       <DateFilter />
-
       <div class="table-container">
         <h1>Lista de Mescs</h1>
         <table>
@@ -28,20 +27,20 @@
                 <router-link :to="{ name: 'EditMesc', params: { id: mesc.id } }">
                   <button><i class="fas fa-edit"></i></button>
                 </router-link>
-                <button @click="deleteMesc(mesc)"><i class="fas fa-trash-alt"></i></button>
+                <button @click="deleteMesc(mesc.id)"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      
       <button class="download-report" @click="downloadReport">Baixar Relatório</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
@@ -49,10 +48,10 @@ import DateFilter from '../components/DateFilter.vue';
 import { jsPDF } from 'jspdf';
 
 interface Mesc {
+  id: number;
   nome: string;
   cpf: string;
   paroquia: string;
-  id: number;
 }
 
 export default defineComponent({
@@ -62,47 +61,69 @@ export default defineComponent({
     UserHeader,
     DateFilter
   },
-  data() {
-    return {
-      mescs: [
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 1 },
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 2 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 3 },
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 4 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 5 },
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 6 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 7 },
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 8 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 9 },
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 10 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 11},
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 12 },
-        { nome: 'Ana Maria Silva', cpf: '123.456.789-01', paroquia: 'N.S de Fátima', id: 13},
-        { nome: 'José Carlos Souza', cpf: '234.567.890-12', paroquia: 'S.J de Deus', id: 14},
-        // Adicione os outros MESCs aqui com IDs únicos
-      ] as Mesc[],
+  setup() {
+    const mescs = ref<Mesc[]>([]);
+    const router = useRouter();
+
+    const fetchMescs = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Você precisa estar logado para visualizar os MESCs.');
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:5000/api/mesc/listarTodosOsMescs', {
+          headers: {
+            'x-access-token': token
+          }
+        });
+        mescs.value = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar MESCs:', error);
+        alert('Erro ao buscar MESCs.');
+      }
     };
-  },
-  methods: {
-    downloadReport() {
+
+    const deleteMesc = async (id: number) => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Você precisa estar logado para deletar um MESC.');
+        return;
+      }
+
+      try {
+        await axios.delete(`http://localhost:5000/api/mesc/deletarMesc/${id}`, {
+          headers: {
+            'x-access-token': token
+          }
+        });
+        mescs.value = mescs.value.filter(mesc => mesc.id !== id);
+        alert('MESC deletado com sucesso!');
+      } catch (error) {
+        console.error('Erro ao deletar MESC:', error);
+        alert('Erro ao deletar MESC.');
+      }
+    };
+
+    const downloadReport = () => {
       const pdf = new jsPDF();
       pdf.text("Relatório de MESCs", 10, 10);
-      this.mescs.forEach((mesc, index) => {
+      mescs.value.forEach((mesc, index) => {
         pdf.text(`${mesc.nome} - ${mesc.cpf} - ${mesc.paroquia}`, 10, 20 + (index * 10));
       });
       pdf.save('Relatório_MESCs.pdf');
-    },
-    viewMesc(id: number) {
-      const router = useRouter();
-      router.push({ name: 'SeeMesc', params: { id: id } });
-    },
-    editMesc(id: number) {
-      const router = useRouter();
-      router.push({ name: 'EditMesc', params: { id: id } });
-    },
-    deleteMesc(mesc: Mesc) {
-      alert(`Deletar: ${mesc.nome}`);
-    }
+    };
+
+    onMounted(() => {
+      fetchMescs();
+    });
+
+    return {
+      mescs,
+      deleteMesc,
+      downloadReport
+    };
   }
 });
 </script>

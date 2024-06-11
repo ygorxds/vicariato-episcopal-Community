@@ -260,16 +260,9 @@
           alert('MESC registrado com sucesso!');
           router.push('/dashboard'); // Redireciona para o dashboard após o cadastro
         } catch (error) {
-          if (error.response) {
-            console.error('Erro ao registrar MESC:', error.response.data);
-            alert(`Erro ao registrar MESC: ${error.response.data.message}`);
-          } else if (error.request) {
-            console.error('Erro ao registrar MESC:', error.request);
-            alert('Erro ao registrar MESC: Não houve resposta do servidor.');
-          } else {
-            console.error('Erro ao registrar MESC:', error.message);
-            alert(`Erro ao registrar MESC: ${error.message}`);
-          }
+      
+          alert ('Mesc não foi registrado')
+
         }
       };
   
