@@ -8,11 +8,11 @@
       </div>
       <input type="text" placeholder="E-mail" v-model="email" />
       <input type="password" placeholder="Senha" v-model="password" />
-        <a href="/" @click="menuNotification" class="forgot-password">Esqueci minha senha</a>
+      <a href="/" @click="menuNotification" class="forgot-password">Esqueci minha senha</a>
       <div class="actions">
         <button @click="login">Entrar</button>
       </div>
-      <p class="register">ou <a  @click="menuNotification" class="register-link">Cadastre-se aqui</a></p>
+      <p class="register">ou <a @click="menuNotification" class="register-link">Cadastre-se aqui</a></p>
     </div>
     <div class="login-image">
       <img src="https://images.pexels.com/photos/267559/pexels-photo-267559.jpeg" alt="Bible Image" />
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import axios from 'axios';
 
 export default defineComponent({
   name: 'UserLogin',
@@ -32,20 +32,24 @@ export default defineComponent({
     const password = ref('');
     const router = useRouter();
 
-    const menuNotification = () =>{
-      alert("OPÇÃO NÃO DISPONIVEL NO MOMENTO. FALE COM O SUPORTE PARA ALTERAR SUA SENHA MANUALMENTE NO BANCO OU CRIAR A SUA CONTA")
+    const menuNotification = () => {
+      alert("OPÇÃO NÃO DISPONIVEL NO MOMENTO. FALE COM O SUPORTE PARA ALTERAR SUA SENHA MANUALMENTE NO BANCO OU CRIAR A SUA CONTA");
     };
 
-    function login() {
-      if (email.value === 'admin' && password.value === 'admin') {
-        router.push('/dashboard');
-      } else {
+    const login = async () => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/user/login', {
+          email: email.value,
+          senha: password.value
+        });
+
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        router.push({ path: '/dashboard', query: { token } });
+      } catch (error) {
         alert('Credenciais incorretas!');
       }
-    }
-    
-
-
+    };
 
     return {
       email,
@@ -77,9 +81,11 @@ export default defineComponent({
   width: 300px;
   margin-bottom: 2rem;
 }
+
 h3 {
-  margin-left: 10px
+  margin-left: 10px;
 }
+
 .header {
   display: flex;
   justify-content: left;
@@ -142,4 +148,3 @@ button {
   height: auto;
 }
 </style>
-

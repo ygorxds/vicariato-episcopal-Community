@@ -42,13 +42,14 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
 import DateFilter from '../components/DateFilter.vue';
 import SchoolDistribuetion from '../components/SchoolDistribuetion.vue';
-import AgeDistributionChart from '@/components/AgeDistributionChart.vue';
 import CityDistributionChart from '@/components/CityDistributionChart.vue';
 import EducationParticipationChart from '@/components/EducationParticipationChart.vue';
 import MaritalStatusChart from '@/components/MaritalStatusChart.vue';
@@ -65,7 +66,6 @@ export default defineComponent({
     DateFilter,
     PieChart,
     SchoolDistribuetion,
-    // AgeDistributionChart,
     CityDistributionChart,
     EducationParticipationChart,
     MaritalStatusChart,
@@ -75,6 +75,7 @@ export default defineComponent({
   },
   setup() {
     const chartsLoaded = ref(false);
+    const router = useRouter();
 
     // Função para simular o carregamento de dados dos gráficos
     const loadCharts = async () => {
@@ -96,6 +97,15 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+      }
+
+      // Configurar axios para usar o token
+      axios.defaults.headers.common['x-access-token'] = token;
+
+      // Carregar os gráficos
       loadCharts();
       window.addEventListener('resize', onResize);
     });
