@@ -10,7 +10,98 @@
             <label>Nome:</label>
             <span>{{ mesc.nome }}</span>
           </div>
-          <!-- Adicione os outros campos aqui -->
+          <div class="detail-item">
+            <label>Data de Nascimento:</label>
+            <span>{{ mesc.dataNascimento }}</span>
+          </div> <div class="detail-item">
+            <label>Nome da Mãe:</label>
+            <span>{{ mesc.mae }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Nome do Pai:</label>
+            <span>{{ mesc.pai }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Identidade:</label>
+            <span>{{ mesc.identidade }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Órgão Emissor:</label>
+            <span>{{ mesc.orgaoEmissor }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Data de Expedição:</label>
+            <span>{{ mesc.dataExpedicao }}</span>
+          </div>
+          <div class="detail-item">
+            <label>CPF:</label>
+            <span>{{ mesc.cpf }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Estado Civil:</label>
+            <span>{{ mesc.estadoCivil }}</span>
+          </div>
+          <div class="detail-item">
+            <label>CEP:</label>
+            <span>{{ mesc.cep }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Naturalidade:</label>
+            <span>{{ mesc.naturalidade }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Estado (UF):</label>
+            <span>{{ mesc.estado }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Endereço:</label>
+            <span>{{ mesc.endereco }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Número:</label>
+            <span>{{ mesc.numero }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Complemento:</label>
+            <span>{{ mesc.complemento }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Bairro:</label>
+            <span>{{ mesc.bairro }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Escolaridade:</label>
+            <span>{{ mesc.escolaridade }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Profissão:</label>
+            <span>{{ mesc.profissao }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Telefone Residencial:</label>
+            <span>{{ mesc.telefoneResidencial }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Telefone Celular:</label>
+            <span>{{ mesc.telefoneCelular }}</span>
+          </div>
+          <div class="detail-item">
+            <label>E-mail:</label>
+            <span>{{ mesc.email }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Paróquia:</label>
+            <span>{{ mesc.paroquia }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Movimentos Pastorais:</label>
+            <span>{{ mesc.movimentosPastorais }}</span>
+          </div>
+          <div v-if="mesc.movimentosPastorais === 'sim'" class="detail-item">
+            <label>Quais Movimentos?</label>
+            <span>{{ mesc.quaisMovimentos }}</span>
+          </div>
+         
         </div>
         <button @click="goBack">Voltar</button>
       </div>
@@ -20,7 +111,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
@@ -33,10 +124,9 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const route = useRoute();
     const mesc = ref<any>(null);
 
-    const fetchMescDetails = async (id: number) => {
+    const fetchMescDetails = async (id: string | number) => {
       const token = localStorage.getItem('token');
       if (!token) {
         alert('Você precisa estar logado para visualizar os detalhes do MESC.');
@@ -44,13 +134,11 @@ export default defineComponent({
       }
 
       try {
-        console.log(`Enviando requisição para buscar detalhes do MESC com ID: ${id}`);
         const response = await axios.get(`http://localhost:5000/api/mesc/verDadosDoMesc/${id}`, {
           headers: {
             'x-access-token': token
           }
         });
-        console.log('Resposta do servidor:', response.data);
         mesc.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar detalhes do MESC:', error);
@@ -63,13 +151,12 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      const id = Number(route.params.id);
-      console.log('ID do MESC recebido no SeeMesc:', id); // Log para verificar o ID
-      if (!isNaN(id)) {
-        fetchMescDetails(id);
+      const mescId = localStorage.getItem('mescId');
+      if (mescId) {
+        fetchMescDetails(mescId);
       } else {
-        console.error('ID do MESC não é um número válido:', route.params.id);
-        alert('ID do MESC inválido.');
+        alert('ID do MESC não encontrado.');
+        goBack();
       }
     });
 

@@ -21,9 +21,7 @@
               <td>{{ mesc.cpf }}</td>
               <td>{{ mesc.paroquia }}</td>
               <td class="actions">
-                <router-link :to="{ name: 'SeeMesc', params: { id: mesc.id } }">
-                  <button><i class="fas fa-eye"></i></button>
-                </router-link>
+                <button @click="viewMesc(mesc.id)"><i class="fas fa-eye"></i></button>
                 <router-link :to="{ name: 'EditMesc', params: { id: mesc.id } }">
                   <button><i class="fas fa-edit"></i></button>
                 </router-link>
@@ -85,6 +83,11 @@ export default defineComponent({
       }
     };
 
+    const viewMesc = (id: number) => {
+      localStorage.setItem('mescId', id.toString());
+      router.push({ name: 'SeeMesc' });
+    };
+
     const deleteMesc = async (id: number) => {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -121,6 +124,7 @@ export default defineComponent({
 
     return {
       mescs,
+      viewMesc,
       deleteMesc,
       downloadReport
     };

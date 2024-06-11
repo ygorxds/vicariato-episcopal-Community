@@ -97,7 +97,7 @@
           </div>
           <div class="form-row">
             <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" v-model="formData.endereco" required readonly />
+            <input type="text" id="endereco" v-model="formData.endereco" required />
           </div>
           <div class="form-row">
             <label for="numero">Número:</label>
