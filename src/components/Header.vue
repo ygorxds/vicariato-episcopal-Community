@@ -6,48 +6,85 @@
         <font-awesome-icon icon="user-circle" class="user-icon"/>
         <div class="text-container">
           <span class="welcome-message">Bem vindo,</span>
-          <span class="user-name">Alfredo Boente</span>
+          <span class="user-name">{{ userName }}</span>
         </div>
       </div>
     </div>
     <!-- Dropdown que aparece baseado no estado isDropdownVisible -->
     <div v-if="isDropdownVisible" class="dropdown">
-  <a href="/see-profile">
-    <font-awesome-icon :icon="['fas', 'user']" /> Ver perfil
-  </a>
-  <a href="/">
-    <font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Fazer logoff
-  </a>
-  <div style="margin-top: 5px;
-  font-size: 12px;
-  color: gray">
-    VMA-Vicariato Mesc Analycs V.Beta
-    
-  </div>
-</div>
+      <a href="/see-profile">
+        <font-awesome-icon :icon="['fas', 'user']" /> Ver perfil
+      </a>
+      <a href="/" @click.prevent="logout">
+        <font-awesome-icon :icon="['fas', 'sign-out-alt']" /> Fazer logoff
+      </a>
+      <div style="margin-top: 5px; font-size: 12px; color: gray">
+        VMA-Vicariato Mesc Analycs V.Beta
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { Vue } from 'vue-class-component';
+import axios from 'axios';
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default {
+export default defineComponent({
   name: 'UserHeader',
   components: {
     'font-awesome-icon': FontAwesomeIcon
   },
-  data() {
-    return {
-      isDropdownVisible: false // Controle de visibilidade do dropdown
-    };
-  },
-  methods: {
-    toggleDropdown() {
-      this.isDropdownVisible = !this.isDropdownVisible;
+  setup() {
+    const userName = ref('Nome do Usuário'); // Inicializa com uma string vazia
+    const isDropdownVisible = ref(false);
+    const router = useRouter();
+
+    const fetchUserName = async () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      console.log('Fetching user name with token:', token); // Adicione este log
+      const response = await axios.get('http://localhost:5000/api/user/me', {
+        headers: {
+          'x-access-token': token
+        }
+      });
+      console.log('User data received:', response.data); // Adicione este log
+      userName.value = response.data.nome;
+    } catch (error) {
+      console.error('Erro ao buscar o nome do usuário:', error);
+      alert('Erro ao buscar o nome do usuário.');
     }
+  } else {
+    alert('Token não encontrado. Faça login novamente.');
+    router.push('/');
   }
-}
+};
+
+
+    const toggleDropdown = () => {
+      isDropdownVisible.value = !isDropdownVisible.value;
+    };
+
+    const logout = () => {
+      localStorage.removeItem('token');
+      router.push('/');
+    };
+
+    onMounted(() => {
+      fetchUserName();
+    });
+
+    return {
+      userName,
+      isDropdownVisible,
+      toggleDropdown,
+      logout
+    };
+  }
+});
 </script>
 
 <style scoped>
@@ -112,7 +149,6 @@ export default {
   border-radius: 10px;
 }
 
-
 .dropdown a {
   padding: 0.5rem;
   text-decoration: none;
@@ -123,5 +159,4 @@ export default {
 .dropdown a:hover {
   background-color: #eeeeee;
 }
-
 </style>

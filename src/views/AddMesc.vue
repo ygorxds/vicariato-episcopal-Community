@@ -258,7 +258,7 @@
           });
           console.log('Dados enviados:', response.data);
           alert('MESC registrado com sucesso!');
-          router.push('/dashboard'); // Redireciona para o dashboard após o cadastro
+          router.push('/list-mesc'); // Redireciona para o dashboard após o cadastro
         } catch (error) {
       
           alert ('Mesc não foi registrado')

@@ -31,9 +31,8 @@
                         <option disabled value="">Selecione um órgão</option>
                         <option value="SSP">SSP - Secretaria de Segurança Pública</option>
                         <option value="PF">PF - Polícia Federal</option>
-                        <option value="DETRAN">DETRAN - Departamento estadual de transito</option>
-                        <option value="DETRAN"></option>
-                        <option value="OUTRO"></option>
+                        <option value="DETRAN">DETRAN - Departamento Estadual de Trânsito</option>
+                        <option value="OUTRO">Outro</option>
                     </select>
                 </div>
                 <div class="form-row">
@@ -98,22 +97,20 @@
                 </div>
                 <div class="form-row">
                     <label for="endereco">Endereço:</label>
-                    <input type="text" id="endereco" v-model="formData.endereco" required readonly>
+                    <input type="text" id="endereco" v-model="formData.endereco" required>
                 </div>
-
                 <div class="form-row">
                     <label for="numero">Número:</label>
-                    <input type="text" id="numero" v-model="formData.endereco" required readonly>
+                    <input type="text" id="numero" v-model="formData.numero" required>
                 </div>
                 <div class="form-row">
                     <label for="complemento">Complemento:</label>
-                    <input type="text" id="complemento" v-model="formData.endereco" required readonly>
+                    <input type="text" id="complemento" v-model="formData.complemento">
                 </div>
                 <div class="form-row">
                     <label for="bairro">Bairro:</label>
-                    <input type="text" id="bairro" v-model="formData.bairro" required readonly>
+                    <input type="text" id="bairro" v-model="formData.bairro" required>
                 </div>
-
                 <div class="form-row">
                     <label for="escolaridade">Escolaridade:</label>
                     <select id="escolaridade" v-model="formData.escolaridade">
@@ -141,7 +138,7 @@
                 </div>
                 <div class="form-row">
                     <label for="paroquia">Paróquia que faz parte:</label>
-                    <select id="paroquia" v-model="formData.paróquia">
+                    <select id="paroquia" v-model="formData.paroquia">
                         <option disabled value="">Selecione uma paróquia</option>
                         <option value="paroquia1">Paróquia São João</option>
                         <option value="paroquia2">Paróquia Santa Maria</option>
@@ -163,17 +160,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 
 export default defineComponent({
-    name: 'RegistrationView',
+    name: 'EditMesc',
     components: {
         SidebarMenu,
         UserHeader
     },
     setup() {
+        const router = useRouter();
         const formData = ref({
             nome: '',
             filiacao: '',
@@ -191,9 +191,9 @@ export default defineComponent({
             numero: '',
             complemento: '',
             bairro: '',
-            paróquia: '',
+            paroquia: '',
             escolaridade: '',
-            profissão: '',
+            profissao: '',
             telefoneResidencial: '',
             telefoneCelular: '',
             email: '',
@@ -235,16 +235,51 @@ export default defineComponent({
         };
 
         const fetchAddress = () => {
-            // Implementar a busca do endereço a partir do CEP dps
+            // Implementar a busca do endereço a partir do CEP depois
         };
 
-        const handleSubmit = () => {
+        const handleSubmit = async () => {
             if (!validateCPF()) {
                 alert("Por favor, corrija os erros antes de submeter.");
                 return;
             }
-            console.log('Dados enviados:', formData.value);
+            try {
+                const mescId = localStorage.getItem('mescId');
+                await axios.put(`http://localhost:5000/api/mesc/editarMesc/${mescId}`, formData.value, {
+                    headers: {
+                        'x-access-token': localStorage.getItem('token')
+                    }
+                });
+                alert("Dados atualizados com sucesso!");
+                router.push('/mesc-details');
+            } catch (error) {
+                console.error("Erro ao atualizar os dados:", error);
+                alert("Erro ao atualizar os dados. Por favor, tente novamente.");
+            }
         };
+
+        const fetchMescData = async () => {
+            const mescId = localStorage.getItem('mescId');
+            if (mescId) {
+                try {
+                    const response = await axios.get(`http://localhost:5000/api/mesc/verDadosDoMesc/${mescId}`, {
+                        headers: {
+                            'x-access-token': localStorage.getItem('token')
+                        }
+                    });
+                    formData.value = response.data;
+                } catch (error) {
+                    console.error("Erro ao buscar dados do MESC:", error);
+                    alert("Erro ao buscar dados do MESC.");
+                }
+            } else {
+                console.warn("Nenhum ID de MESC encontrado no localStorage.");
+            }
+        };
+
+        onMounted(() => {
+            fetchMescData();
+        });
 
         return {
             formData,
@@ -272,7 +307,6 @@ export default defineComponent({
     background-color: #dddddd;
 }
 
-/* Certifique-se de que o UserHeader esteja sendo renderizado corretamente */
 .user-header {
     width: 100%;
     background-color: #fff;
@@ -300,7 +334,7 @@ export default defineComponent({
 .form-row label {
     width: 200px;
     min-width: 120px;
-    padding-right: 10zpx;
+    padding-right: 10px;
 }
 
 .form-row input,

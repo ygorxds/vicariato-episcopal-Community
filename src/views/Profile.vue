@@ -6,17 +6,20 @@
       <div class="content-area">
         <div class="profile-container">
           <h1>Perfil do usuário</h1>
-          <div class="profile-card">
+          <div class="profile-card" v-if="user">
             <img src="@/assets/boente.png" alt="User Image" class="profile-image" />
             <div class="profile-details">
-              <p><strong>Nome:</strong> <span class="highlight">Alfredo Boente</span></p>
-              <p><strong>Idade:</strong> <span class="highlight">45 anos</span></p>
-              <p><strong>Gênero:</strong> <span class="highlight">Masculino</span></p>
-              <p><strong>Status:</strong> Coordenador</p>
+              <p><strong>Nome:</strong> <span class="highlight">{{ user.nome }}</span></p>
+              <p><strong>Idade:</strong> <span class="highlight">{{ idade }} anos</span></p>
+              <p><strong>Gênero:</strong> <span class="highlight">{{ user.genero }}</span></p>
+              <p><strong>Status:</strong> {{ user.statusConta }}</p>
             </div>
-            <button class="update-button" @click="goToUpdateUSerPage">Atualizar meus dados</button>
+            <button class="update-button" @click="goToUpdateUserPage">Atualizar meus dados</button>
             <button style="margin-left: 10px;" class="update-button" @click="goToNewUserPage">+</button>
             <button style="margin-left: 10px;" class="update-button" @click="goToDeleteMyProfile">Deletar minha conta</button>
+          </div>
+          <div v-else>
+            <p>Carregando...</p>
           </div>
         </div>
       </div>
@@ -25,7 +28,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import axios from 'axios';
 import { useRouter } from 'vue-router';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
@@ -38,22 +42,77 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
+    const user = ref(null);
+    const idade = ref('');
+
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:5000/api/user/myData', {
+            headers: {
+              'x-access-token': token
+            }
+          });
+          user.value = response.data;
+          calcularIdade(response.data.dataNascimento);
+        } catch (error) {
+          console.error('Erro ao buscar os dados do usuário:', error);
+          alert('Erro ao buscar os dados do usuário.');
+        }
+      } else {
+        alert('Token não encontrado. Faça login novamente.');
+        router.push('/');
+      }
+    };
+
+    const calcularIdade = (dataNascimento: string) => {
+      const hoje = new Date();
+      const nascimento = new Date(dataNascimento);
+      let idadeCalculada = hoje.getFullYear() - nascimento.getFullYear();
+      const mes = hoje.getMonth() - nascimento.getMonth();
+      if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+        idadeCalculada--;
+      }
+      idade.value = idadeCalculada.toString();
+    };
 
     const goToNewUserPage = () => {
       router.push('/new-user');
     };
-    const goToUpdateUSerPage = () =>{
+
+    const goToUpdateUserPage = () => {
       router.push('/update-user');
-
     };
-    const goToDeleteMyProfile = () =>{
-      alert("OPÇÃO NÃO DISPONIVEL NO MOMENTO")
 
+    const goToDeleteMyProfile = async () => {
+      const userConfirmed = window.confirm("Você tem certeza que deseja deletar sua conta?");
+      if (userConfirmed) {
+        const token = localStorage.getItem('token');
+        try {
+          const response = await axios.delete('http://localhost:5000/api/user/deleteAccount', {
+            headers: {
+              'x-access-token': token
+            }
+          });
+          alert(response.data.msg);
+          router.push('/'); // Redireciona para a página inicial após deletar a conta
+        } catch (error) {
+          console.error('Erro ao deletar a conta:', error);
+          alert('Erro ao deletar a conta.');
+        }
+      }
     };
+
+    onMounted(() => {
+      fetchUserData();
+    });
 
     return {
+      user,
+      idade,
       goToNewUserPage,
-      goToUpdateUSerPage,
+      goToUpdateUserPage,
       goToDeleteMyProfile
     };
   },
