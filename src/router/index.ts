@@ -10,6 +10,11 @@ import EditMesc from '@/views/EditMescView.vue';
 import SeeMesc from '@/views/SeeMesc.vue';
 import NewUser from '@/views/CreateUser.vue'
 import UpdateUser from '@/views/UpdateUserView.vue'
+import InstitutionManagement from '@/views/InstitutionManagementView.vue'
+import CreateParish from '@/views/CreateParishView.vue'
+import ListParish from '@/views/ListParishView.vue'
+import CreateChapel from '@/views/CreateChapelView.vue'
+import ListChapel from '@/views/ListChapelView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -67,6 +72,32 @@ const routes: Array<RouteRecordRaw> = [
     name: 'UpdateUser',
     component: UpdateUser
   },
+  {
+    path: '/institution-management',
+    name: 'InstitutionManagement',
+    component: InstitutionManagement
+  },
+  {
+    path: '/create-parish',
+    name: 'CreateParish',
+    component: CreateParish
+  },
+  {
+  path: '/list-parish',
+  name: 'ListParish',
+  component: ListParish
+},
+{
+  path: '/create-chapel',
+  name: 'CreateChapel',
+  component: CreateChapel,
+},
+{
+  path: '/list-chapel',
+  name: 'ListChapel',
+  component: ListChapel,
+},
+
 
 ];
 

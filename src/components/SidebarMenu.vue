@@ -26,6 +26,12 @@
             <span>Listar Mescs</span>
           </router-link>
         </li>
+        <li class="menu-item">
+          <router-link to="/institution-management" class="menu-link">
+            <font-awesome-icon :icon="['fas', 'church']" class="icon"/>
+            <span>Gerenciamento de instituições</span>
+          </router-link>
+        </li>
       </ul>
     </div>
   </template>
