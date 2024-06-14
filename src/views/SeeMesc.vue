@@ -13,7 +13,8 @@
           <div class="detail-item">
             <label>Data de Nascimento:</label>
             <span>{{ mesc.dataNascimento }}</span>
-          </div> <div class="detail-item">
+          </div>
+          <div class="detail-item">
             <label>Nome da Mãe:</label>
             <span>{{ mesc.mae }}</span>
           </div>
@@ -91,7 +92,11 @@
           </div>
           <div class="detail-item">
             <label>Paróquia:</label>
-            <span>{{ mesc.paroquia }}</span>
+            <span>{{ getParoquiaNome(mesc.paroqId) }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Capela:</label>
+            <span>{{ getCapelaNome(mesc.capelId) }}</span>
           </div>
           <div class="detail-item">
             <label>Movimentos Pastorais:</label>
@@ -101,7 +106,6 @@
             <label>Quais Movimentos?</label>
             <span>{{ mesc.quaisMovimentos }}</span>
           </div>
-         
         </div>
         <button @click="goBack">Voltar</button>
       </div>
@@ -116,6 +120,46 @@ import axios from 'axios';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 
+interface Mesc {
+  id: number;
+  nome: string;
+  dataNascimento: string;
+  mae: string;
+  pai: string;
+  identidade: string;
+  orgaoEmissor: string;
+  dataExpedicao: string;
+  cpf: string;
+  estadoCivil: string;
+  cep: string;
+  naturalidade: string;
+  estado: string;
+  endereco: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
+  escolaridade: string;
+  profissao: string;
+  telefoneResidencial: string;
+  telefoneCelular: string;
+  email: string;
+  paroqId: string;
+  capelId: string;
+  movimentosPastorais: string;
+  quaisMovimentos: string;
+}
+
+interface Paroquia {
+  id: string;
+  nome: string;
+}
+
+interface Capela {
+  id: string;
+  nome: string;
+  paroqId: string;
+}
+
 export default defineComponent({
   name: 'MescDetails',
   components: {
@@ -124,7 +168,9 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
-    const mesc = ref<any>(null);
+    const mesc = ref<Mesc | null>(null);
+    const paroquias = ref<Paroquia[]>([]);
+    const capelas = ref<Capela[]>([]);
 
     const fetchMescDetails = async (id: string | number) => {
       const token = localStorage.getItem('token');
@@ -146,6 +192,34 @@ export default defineComponent({
       }
     };
 
+    const fetchParoquias = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/paroquia/listar');
+        paroquias.value = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar paróquias:', error);
+      }
+    };
+
+    const fetchCapelas = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/capela/listar');
+        capelas.value = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar capelas:', error);
+      }
+    };
+
+    const getParoquiaNome = (paroqId: string) => {
+      const paroquia = paroquias.value.find(paroquia => paroquia.id === paroqId);
+      return paroquia ? paroquia.nome : 'Desconhecida';
+    };
+
+    const getCapelaNome = (capelId: string) => {
+      const capela = capelas.value.find(capela => capela.id === capelId);
+      return capela ? capela.nome : 'Desconhecida';
+    };
+
     const goBack = () => {
       router.back();
     };
@@ -154,6 +228,8 @@ export default defineComponent({
       const mescId = localStorage.getItem('mescId');
       if (mescId) {
         fetchMescDetails(mescId);
+        fetchParoquias();
+        fetchCapelas();
       } else {
         alert('ID do MESC não encontrado.');
         goBack();
@@ -162,6 +238,10 @@ export default defineComponent({
 
     return {
       mesc,
+      paroquias,
+      capelas,
+      getParoquiaNome,
+      getCapelaNome,
       goBack
     };
   }

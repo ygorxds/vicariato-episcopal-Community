@@ -19,7 +19,7 @@
             <tr v-for="(mesc, index) in mescs" :key="index">
               <td>{{ mesc.nome }}</td>
               <td>{{ mesc.cpf }}</td>
-              <td>{{ mesc.paroquia }}</td>
+              <td>{{ getParoquiaNome(mesc.paroqId) }}</td>
               <td class="actions">
                 <button @click="viewMesc(mesc.id)"><i class="fas fa-eye"></i></button>
                 <router-link :to="{ name: 'EditMesc', params: { id: mesc.id } }">
@@ -49,7 +49,12 @@ interface Mesc {
   id: number;
   nome: string;
   cpf: string;
-  paroquia: string;
+  paroqId: string;
+}
+
+interface Paroquia {
+  id: string;
+  nome: string;
 }
 
 export default defineComponent({
@@ -61,6 +66,7 @@ export default defineComponent({
   },
   setup() {
     const mescs = ref<Mesc[]>([]);
+    const paroquias = ref<Paroquia[]>([]);
     const router = useRouter();
 
     const fetchMescs = async () => {
@@ -81,6 +87,21 @@ export default defineComponent({
         console.error('Erro ao buscar MESCs:', error);
         alert('Erro ao buscar MESCs.');
       }
+    };
+
+    const fetchParoquias = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/paroquia/listar');
+        paroquias.value = response.data;
+      } catch (error) {
+        console.error('Erro ao buscar paróquias:', error);
+        alert('Erro ao buscar paróquias.');
+      }
+    };
+
+    const getParoquiaNome = (paroqId: string) => {
+      const paroquia = paroquias.value.find(paroquia => paroquia.id === paroqId);
+      return paroquia ? paroquia.nome : 'Desconhecida';
     };
 
     const viewMesc = (id: number) => {
@@ -113,17 +134,20 @@ export default defineComponent({
       const pdf = new jsPDF();
       pdf.text("Relatório de MESCs", 10, 10);
       mescs.value.forEach((mesc, index) => {
-        pdf.text(`${mesc.nome} - ${mesc.cpf} - ${mesc.paroquia}`, 10, 20 + (index * 10));
+        pdf.text(`${mesc.nome} - ${mesc.cpf} - ${getParoquiaNome(mesc.paroqId)}`, 10, 20 + (index * 10));
       });
       pdf.save('Relatório_MESCs.pdf');
     };
 
     onMounted(() => {
       fetchMescs();
+      fetchParoquias();
     });
 
     return {
       mescs,
+      paroquias,
+      getParoquiaNome,
       viewMesc,
       deleteMesc,
       downloadReport
