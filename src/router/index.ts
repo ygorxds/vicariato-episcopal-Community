@@ -17,7 +17,8 @@ import CreateChapel from '@/views/CreateChapelView.vue';
 import ListChapel from '@/views/ListChapelView.vue';
 import SeeChapel from '@/views/ChapelDatailsView.vue';
 import EditChapel from '@/views/EditChapelView.vue';
-
+import ParishDetailsView from '@/views/ParishDetailsView.vue'
+import EditParishView from '@/views/EditParishView.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -110,7 +111,17 @@ const routes: Array<RouteRecordRaw> = [
     name: 'EditChapel',
     component: EditChapel,
     props: true
-  }
+  },
+  {
+    path: '/see-parish/:id',
+    name: 'SeeParish',
+    component: ParishDetailsView
+  },
+  {
+    path: '/edit-parish/:id',
+    name: 'EditParish',
+    component: EditParishView
+  },
 ];
 
 const router = createRouter({
