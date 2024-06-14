@@ -1,39 +1,95 @@
 <template>
-  <div class="filter-container">
-    <div class="filter-item">
-      <label for="startDate">Data inicial:</label>
-      <input type="date" id="startDate" v-model="startDate" @change="emitStartDate" />
-      <label for="endDate">Data final:</label>
-      <input type="date" id="endDate" v-model="endDate" @change="emitEndDate" />
+  <div class="main-container">
+    <div class="header">
+      <div class="date-filters">
+        <label for="startDate">Data inicial:</label>
+        <input type="date" id="startDate" v-model="startDate" @change="handleDateChange" />
+        <label for="endDate">Data final:</label>
+        <input type="date" id="endDate" v-model="endDate" @change="handleDateChange" />
+        <select id="periodSelector" v-model="selectedPeriod" @change="updateDates">
+          <option disabled value="">Filtre o Período</option>
+          <option value="weekly">Semana atual</option>
+          <option value="last_week">Semana anterior</option>
+          <option value="monthly">Mês atual</option>
+          <option value="last_month">Mês anterior</option>
+          <option value="yearly">Ano atual</option>
+          <option value="last_year">Ano anterior</option>
+          <option value="all_time">Todo o Período</option>
+          <option value="custom">Customizado</option>
+        </select>
+      </div>
+      <font-awesome-icon icon="filter" class="filter-icon" @click="showFilter = !showFilter"/>
     </div>
-    <div class="filter-item">
-      <label for="churchSelector">Filtrar por Igreja:</label>
-      <select id="churchSelector" v-model="selectedChurch" @change="emitChurch">
-        <option disabled value="">Selecione uma Igreja</option>
-        <option v-for="church in churches" :key="church" :value="church">{{ church }}</option>
-      </select>
-    </div>
+    <GeneralFilter v-if="showFilter" @close="showFilter = false" class="sidebar-filter"/>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script>
+import { ref, watch } from 'vue';
+import GeneralFilter from './GeneralFilter.vue';
 
-export default defineComponent({
-  name: 'DateFilter',
+export default {
+  components: {
+    GeneralFilter,
+  },
   setup(_, { emit }) {
     const startDate = ref('');
     const endDate = ref('');
-    const selectedChurch = ref('');
-    const churches = [
-      'Paróquia Nossa Senhora da Conceição',
-      'Paróquia São José Operário',
-      'Paróquia Santa Luzia',
-      'Paróquia Santo Antônio de Pádua',
-      'Paróquia São Judas Tadeu',
-      'Todas'
-      // Adicione mais igrejas conforme necessário
-    ];
+    const selectedPeriod = ref('');
+    const showFilter = ref(false);
+
+    const updateDates = () => {
+      const today = new Date();
+      let start = '';
+      let end = '';
+
+      switch (selectedPeriod.value) {
+        case 'weekly':
+          start = new Date(today.setDate(today.getDate() - today.getDay() + 1)).toISOString().split('T')[0];
+          end = new Date(today.setDate(today.getDate() - today.getDay() + 7)).toISOString().split('T')[0];
+          break;
+        case 'last_week':
+          start = new Date(today.setDate(today.getDate() - today.getDay() - 6)).toISOString().split('T')[0];
+          end = new Date(today.setDate(today.getDate() - today.getDay())).toISOString().split('T')[0];
+          break;
+        case 'monthly':
+          start = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+          end = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+          break;
+        case 'last_month':
+          start = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0];
+          end = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+          break;
+        case 'yearly':
+          start = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0];
+          end = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0];
+          break;
+        case 'last_year':
+          start = new Date(today.getFullYear() - 1, 0, 1).toISOString().split('T')[0];
+          end = new Date(today.getFullYear() - 1, 11, 31).toISOString().split('T')[0];
+          break;
+        case 'all_time':
+          start = '';
+          end = '';
+          break;
+        case 'custom':
+          // No need to change dates when custom is selected
+          break;
+      }
+
+      if (selectedPeriod.value !== 'custom') {
+        startDate.value = start;
+        endDate.value = end;
+      }
+    };
+
+    const handleDateChange = () => {
+      if (startDate.value || endDate.value) {
+        selectedPeriod.value = 'custom';
+      }
+      emitStartDate();
+      emitEndDate();
+    };
 
     function emitStartDate() {
       emit('startDateSelected', startDate.value);
@@ -43,16 +99,57 @@ export default defineComponent({
       emit('endDateSelected', endDate.value);
     }
 
-    function emitChurch() {
-      emit('churchSelected', selectedChurch.value);
-    }
-
-    return { startDate, endDate, selectedChurch, churches, emitStartDate, emitEndDate, emitChurch };
+    return { startDate, endDate, selectedPeriod, showFilter, emitStartDate, emitEndDate, updateDates, handleDateChange };
   }
-});
+};
 </script>
 
 <style scoped>
+.main-container {
+  position: relative;
+  padding: 20px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
+  margin-left: 19px;
+  margin-right: 19px;
+  margin-top: 19px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-icon {
+  cursor: pointer;
+  font-size: 24px;
+  color: #858585;
+}
+
+.sidebar-filter {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 0 10px 10px 0;
+}
+
 .filter-container {
   background-color: white;
   padding: 20px;
