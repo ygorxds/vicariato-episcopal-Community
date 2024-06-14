@@ -27,7 +27,7 @@
                 <td>{{ capela.complemento }}</td>
                 <td class="actions">
                   <button @click="viewCapela(capela.id)"><i class="fas fa-eye"></i></button>
-                  <router-link :to="{ name: 'ListChapel', params: { id: capela.id } }">
+                  <router-link :to="{ name: 'EditChapel', params: { id: capela.id } }">
                     <button><i class="fas fa-edit"></i></button>
                   </router-link>
                   <button @click="deleteCapela(capela.id)"><i class="fas fa-trash-alt"></i></button>
@@ -121,8 +121,7 @@
       };
   
       const viewCapela = (id: number) => {
-        localStorage.setItem('capelaId', id.toString());
-        router.push({ name: 'SeeCapela' });
+        router.push({ name: 'SeeChapel', params: { id } });
       };
   
       const deleteCapela = async (id: number) => {
