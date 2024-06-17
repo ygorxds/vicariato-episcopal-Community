@@ -8,22 +8,27 @@
         <div class="form-row">
           <label for="nome">Nome:</label>
           <input type="text" id="nome" v-model="formData.nome" required />
+          <span v-if="errors.nome" class="error">{{ errors.nome }}</span>
         </div>
         <div class="form-row">
           <label for="dataNascimento">Data de Nascimento:</label>
           <input type="date" id="dataNascimento" v-model="formData.dataNascimento" required />
+          <span v-if="errors.dataNascimento" class="error">{{ errors.dataNascimento }}</span>
         </div>
         <div class="form-row">
           <label for="mae">Nome da Mãe:</label>
           <input type="text" id="mae" v-model="formData.mae" />
+          <span v-if="errors.mae" class="error">{{ errors.mae }}</span>
         </div>
         <div class="form-row">
           <label for="pai">Nome do Pai:</label>
           <input type="text" id="pai" v-model="formData.pai" />
+          <span v-if="errors.pai" class="error">{{ errors.pai }}</span>
         </div>
         <div class="form-row">
           <label for="identidade">Identidade:</label>
           <input type="text" id="identidade" v-model="formData.identidade" required />
+          <span v-if="errors.identidade" class="error">{{ errors.identidade }}</span>
         </div>
         <div class="form-row">
           <label for="orgaoEmissor">Órgão Emissor:</label>
@@ -31,18 +36,20 @@
             <option disabled value="">Selecione um órgão</option>
             <option value="SSP">SSP - Secretaria de Segurança Pública</option>
             <option value="PF">PF - Polícia Federal</option>
-            <option value="DETRAN">DETRAN - Departamento estadual de transito</option>
+            <option value="DETRAN">DETRAN - Departamento estadual de trânsito</option>
             <option value="OUTRO">OUTRO</option>
           </select>
+          <span v-if="errors.orgaoEmissor" class="error">{{ errors.orgaoEmissor }}</span>
         </div>
         <div class="form-row">
           <label for="dataExpedicao">Data de Expedição:</label>
           <input type="date" id="dataExpedicao" v-model="formData.dataExpedicao" required />
+          <span v-if="errors.dataExpedicao" class="error">{{ errors.dataExpedicao }}</span>
         </div>
         <div class="form-row">
           <label for="cpf">CPF:</label>
-          <input type="text" id="cpf" v-model="formData.cpf" @blur="validateCPF" />
-          <span v-if="cpfError" class="error">{{ cpfError }}</span>
+          <input type="text" id="cpf" v-model="formData.cpf" @blur="validateCPF" @input="formatCPF" />
+          <span v-if="errors.cpf" class="error">{{ errors.cpf }}</span>
         </div>
         <div class="form-row">
           <label for="estadoCivil">Estado Civil:</label>
@@ -53,14 +60,17 @@
             <option value="divorciado">Divorciado(a)</option>
             <option value="viuvo">Viúvo(a)</option>
           </select>
+          <span v-if="errors.estadoCivil" class="error">{{ errors.estadoCivil }}</span>
         </div>
         <div class="form-row">
           <label for="cep">CEP:</label>
-          <input type="text" id="cep" v-model="formData.cep" @blur="fetchAddress" />
+          <input type="text" id="cep" v-model="formData.cep" />
+          <span v-if="errors.cep" class="error">{{ errors.cep }}</span>
         </div>
         <div class="form-row">
           <label for="naturalidade">Naturalidade:</label>
           <input type="text" id="naturalidade" v-model="formData.naturalidade" required />
+          <span v-if="errors.naturalidade" class="error">{{ errors.naturalidade }}</span>
         </div>
         <div class="form-row">
           <label for="estado">Estado (UF):</label>
@@ -94,22 +104,27 @@
             <option value="SE">Sergipe</option>
             <option value="TO">Tocantins</option>
           </select>
+          <span v-if="errors.estado" class="error">{{ errors.estado }}</span>
         </div>
         <div class="form-row">
           <label for="endereco">Endereço:</label>
           <input type="text" id="endereco" v-model="formData.endereco" required />
+          <span v-if="errors.endereco" class="error">{{ errors.endereco }}</span>
         </div>
         <div class="form-row">
           <label for="numero">Número:</label>
           <input type="text" id="numero" v-model="formData.numero" required />
+          <span v-if="errors.numero" class="error">{{ errors.numero }}</span>
         </div>
         <div class="form-row">
           <label for="complemento">Complemento:</label>
           <input type="text" id="complemento" v-model="formData.complemento" />
+          <span v-if="errors.complemento" class="error">{{ errors.complemento }}</span>
         </div>
         <div class="form-row">
           <label for="bairro">Bairro:</label>
           <input type="text" id="bairro" v-model="formData.bairro" required />
+          <span v-if="errors.bairro" class="error">{{ errors.bairro }}</span>
         </div>
         <div class="form-row">
           <label for="escolaridade">Escolaridade:</label>
@@ -119,31 +134,37 @@
             <option value="medio">Ensino Médio</option>
             <option value="superior">Ensino Superior</option>
           </select>
+          <span v-if="errors.escolaridade" class="error">{{ errors.escolaridade }}</span>
         </div>
         <div class="form-row">
           <label for="profissao">Profissão:</label>
           <input type="text" id="profissao" v-model="formData.profissao" required />
+          <span v-if="errors.profissao" class="error">{{ errors.profissao }}</span>
         </div>
         <div class="form-row">
           <label for="telefoneResidencial">Telefone Residencial:</label>
           <input type="text" id="telefoneResidencial" v-model="formData.telefoneResidencial" />
+          <span v-if="errors.telefoneResidencial" class="error">{{ errors.telefoneResidencial }}</span>
         </div>
         <div class="form-row">
           <label for="telefoneCelular">Telefone Celular:</label>
           <input type="text" id="telefoneCelular" v-model="formData.telefoneCelular" required />
+          <span v-if="errors.telefoneCelular" class="error">{{ errors.telefoneCelular }}</span>
         </div>
         <div class="form-row">
           <label for="email">E-mail:</label>
           <input type="email" id="email" v-model="formData.email" required />
+          <span v-if="errors.email" class="error">{{ errors.email }}</span>
         </div>
         <div class="form-row">
           <label for="paroquia">Paróquia que faz parte:</label>
-          <select id="paroquia" v-model="selectedParoquiaId" @change="filterCapelas" required>
+          <select id="paroquia" v-model="formData.paroqId" @change="filterCapelas" required>
             <option disabled value="">Selecione uma paróquia</option>
             <option v-for="paroquia in paroquias" :key="paroquia.id" :value="paroquia.id">
               {{ paroquia.nome }}
             </option>
           </select>
+          <span v-if="errors.paroqId" class="error">{{ errors.paroqId }}</span>
         </div>
         <div class="form-row" v-if="filteredCapelas.length > 0">
           <label for="capela">Capela:</label>
@@ -152,6 +173,7 @@
               {{ capela.nome }}
             </option>
           </select>
+          <span v-if="errors.capelId" class="error">{{ errors.capelId }}</span>
         </div>
         <div class="form-row">
           <label for="movimentosPastorais">Participação em outros movimentos pastorais:</label>
@@ -161,8 +183,11 @@
           </div>
           <input v-if="formData.movimentosPastorais === 'sim'" type="text" id="quaisMovimentos"
             v-model="formData.quaisMovimentos" placeholder="Quais movimentos?" />
+          <span v-if="errors.movimentosPastorais" class="error">{{ errors.movimentosPastorais }}</span>
+          <span v-if="formData.movimentosPastorais === 'sim' && errors.quaisMovimentos" class="error">{{ errors.quaisMovimentos }}</span>
         </div>
         <button type="submit">Registrar</button>
+        <div v-if="submitError" class="submit-error">{{ submitError }}</div>
       </form>
     </div>
   </div>
@@ -215,17 +240,17 @@ export default defineComponent({
       telefoneResidencial: '',
       telefoneCelular: '',
       email: '',
-      paróquia: '',
+      paroqId: '', // Campo para o ID da paróquia
+      capelId: '', // Campo para o ID da capela
       movimentosPastorais: '',
-      quaisMovimentos: '',
-      paroqId: '', // Altere para parocId
-      capelId: '' // Altere para capelId
+      quaisMovimentos: ''
     });
+    const errors = ref<any>({});
     const cpfError = ref('');
+    const submitError = ref('');
     const router = useRouter();
     const paroquias = ref<Paroquia[]>([]);
     const capelas = ref<Capela[]>([]);
-    const selectedParoquiaId = ref<string>('');
     const filteredCapelas = ref<Capela[]>([]);
 
     const fetchParoquias = async () => {
@@ -234,6 +259,7 @@ export default defineComponent({
         paroquias.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar paróquias:', error);
+        errors.value.paroqId = 'Erro ao carregar paróquias';
       }
     };
 
@@ -243,11 +269,12 @@ export default defineComponent({
         capelas.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar capelas:', error);
+        errors.value.capelId = 'Erro ao carregar capelas';
       }
     };
 
     const filterCapelas = () => {
-      filteredCapelas.value = capelas.value.filter((capela: Capela) => capela.paroqId === selectedParoquiaId.value);
+      filteredCapelas.value = capelas.value.filter((capela: Capela) => capela.paroqId === formData.value.paroqId);
     };
 
     onMounted(() => {
@@ -287,13 +314,41 @@ export default defineComponent({
       return true;
     };
 
-    const fetchAddress = () => {
-      // Implementar a busca do endereço a partir do CEP depois
+    const formatCPF = () => {
+      const digits = formData.value.cpf.replace(/\D/g, '');
+      if (digits.length <= 11) {
+        formData.value.cpf = digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      }
+    };
+
+    const validateForm = () => {
+      errors.value = {};
+
+      if (!formData.value.nome) errors.value.nome = 'Nome é obrigatório';
+      if (!formData.value.dataNascimento) errors.value.dataNascimento = 'Data de nascimento é obrigatória';
+      if (!formData.value.identidade) errors.value.identidade = 'Identidade é obrigatória';
+      if (!formData.value.orgaoEmissor) errors.value.orgaoEmissor = 'Órgão emissor é obrigatório';
+      if (!formData.value.dataExpedicao) errors.value.dataExpedicao = 'Data de expedição é obrigatória';
+      if (!formData.value.cpf || !validateCPF()) errors.value.cpf = 'CPF inválido';
+      if (!formData.value.estadoCivil) errors.value.estadoCivil = 'Estado civil é obrigatório';
+      if (!formData.value.cep) errors.value.cep = 'CEP é obrigatório';
+      if (!formData.value.naturalidade) errors.value.naturalidade = 'Naturalidade é obrigatória';
+      if (!formData.value.estado) errors.value.estado = 'Estado é obrigatório';
+      if (!formData.value.endereco) errors.value.endereco = 'Endereço é obrigatório';
+      if (!formData.value.numero) errors.value.numero = 'Número é obrigatório';
+      if (!formData.value.bairro) errors.value.bairro = 'Bairro é obrigatório';
+      if (!formData.value.escolaridade) errors.value.escolaridade = 'Escolaridade é obrigatória';
+      if (!formData.value.profissao) errors.value.profissao = 'Profissão é obrigatória';
+      if (!formData.value.telefoneCelular) errors.value.telefoneCelular = 'Telefone celular é obrigatório';
+      if (!formData.value.email) errors.value.email = 'E-mail é obrigatório';
+      if (!formData.value.paroqId) errors.value.paroqId = 'Paróquia é obrigatória';
+      if (!formData.value.capelId) errors.value.capelId = 'Capela é obrigatória';
+
+      return Object.keys(errors.value).length === 0;
     };
 
     const handleSubmit = async () => {
-      if (!validateCPF()) {
-        alert("Por favor, corrija os erros antes de submeter.");
+      if (!validateForm()) {
         return;
       }
 
@@ -313,21 +368,27 @@ export default defineComponent({
         alert('MESC registrado com sucesso!');
         router.push('/list-mesc'); // Redireciona para o dashboard após o cadastro
       } catch (error) {
-        alert('Mesc não foi registrado');
+        if (axios.isAxiosError(error) && error.response) {
+          submitError.value = 'Erro ao registrar MESC: ' + (error.response.data?.msg || error.message);
+        } else {
+          submitError.value = 'Erro ao registrar MESC: ' + (error as Error).message;
+        }
       }
     };
 
     return {
       formData,
-      validateCPF,
-      fetchAddress,
-      handleSubmit,
+      errors,
       cpfError,
+      submitError,
       paroquias,
       capelas,
-      selectedParoquiaId,
       filteredCapelas,
-      filterCapelas
+      filterCapelas,
+      validateCPF,
+      formatCPF,
+      validateForm,
+      handleSubmit
     };
   }
 });
@@ -411,5 +472,12 @@ button:hover {
 h2 {
   text-align: center;
   margin-bottom: 20px;
+}
+
+.submit-error {
+  color: #ff0000;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

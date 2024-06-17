@@ -20,12 +20,12 @@
       </div>
       <font-awesome-icon icon="filter" class="filter-icon" @click="showFilter = !showFilter"/>
     </div>
-    <GeneralFilter v-if="showFilter" @close="showFilter = false" class="sidebar-filter"/>
+    <GeneralFilter v-if="showFilter" @close="showFilter = false" @paroquiaSelected="handleParoquiaSelected" @capelaSelected="handleCapelaSelected" class="sidebar-filter"/>
   </div>
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import GeneralFilter from './GeneralFilter.vue';
 
 export default {
@@ -37,6 +37,8 @@ export default {
     const endDate = ref('');
     const selectedPeriod = ref('');
     const showFilter = ref(false);
+    const selectedParoquia = ref('');
+    const selectedCapela = ref('');
 
     const updateDates = () => {
       const today = new Date();
@@ -81,25 +83,36 @@ export default {
         startDate.value = start;
         endDate.value = end;
       }
+      emitFilters();
     };
 
     const handleDateChange = () => {
       if (startDate.value || endDate.value) {
         selectedPeriod.value = 'custom';
       }
-      emitStartDate();
-      emitEndDate();
+      emitFilters();
     };
 
-    function emitStartDate() {
-      emit('startDateSelected', startDate.value);
-    }
+    const handleParoquiaSelected = (paroquiaId) => {
+      selectedParoquia.value = paroquiaId;
+      emitFilters();
+    };
 
-    function emitEndDate() {
-      emit('endDateSelected', endDate.value);
-    }
+    const handleCapelaSelected = (capelaId) => {
+      selectedCapela.value = capelaId;
+      emitFilters();
+    };
 
-    return { startDate, endDate, selectedPeriod, showFilter, emitStartDate, emitEndDate, updateDates, handleDateChange };
+    const emitFilters = () => {
+      emit('filtersUpdated', {
+        startDate: startDate.value,
+        endDate: endDate.value,
+        paroquia: selectedParoquia.value,
+        capela: selectedCapela.value,
+      });
+    };
+
+    return { startDate, endDate, selectedPeriod, showFilter, updateDates, handleDateChange, handleParoquiaSelected, handleCapelaSelected };
   }
 };
 </script>

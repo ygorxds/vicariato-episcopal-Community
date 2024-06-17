@@ -4,14 +4,14 @@
       <font-awesome-icon icon="times" />
     </button>
     <div class="filter-options">
-      <h1 style="color: darkred" for="filterType">Filtros:</h1>
+      <h1 style="color: darkred">Filtros:</h1>
       <label for="paroquia">Selecione a Paróquia:</label>
       <select v-model="selectedParoquia" @change="handleParoquiaChange">
         <option value="">Selecione</option>
         <option v-for="paroquia in paroquias" :key="paroquia.id" :value="paroquia.id">{{ paroquia.nome }}</option>
       </select>
       <label for="capela">Selecione a Capela:</label>
-      <select v-model="selectedCapela" :disabled="!selectedParoquia">
+      <select v-model="selectedCapela" @change="handleCapelaChange" :disabled="!selectedParoquia">
         <option value="">Selecione</option>
         <option v-for="capela in filteredCapelas" :key="capela.id" :value="capela.id">{{ capela.nome }}</option>
       </select>
@@ -34,13 +34,17 @@ export default {
     };
   },
   methods: {
-    async handleParoquiaChange() {
+    handleParoquiaChange() {
       this.selectedCapela = '';
       if (this.selectedParoquia) {
         this.filteredCapelas = this.capelas.filter(capela => capela.paroqId === this.selectedParoquia);
       } else {
         this.filteredCapelas = [];
       }
+      this.$emit('paroquiaSelected', this.selectedParoquia);
+    },
+    handleCapelaChange() {
+      this.$emit('capelaSelected', this.selectedCapela);
     },
     async fetchParoquias() {
       try {

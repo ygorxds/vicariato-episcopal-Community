@@ -3,7 +3,7 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
-      <DateFilter />
+      <DateFilter @filtersUpdated="updateFilters" />
       <div class="selector-container">
         <label for="chartType"><b>Selecione o tipo de análise:</b></label>
         <select class="selectChoose" v-model="selectedChart" @change="loadChart">
@@ -23,16 +23,16 @@
       <div class="chart-display-area">
         <div v-if="selectedChart">
           <div v-if="chartsLoaded" class="charts-container">
-            <PieChart v-if="selectedChart === 'gender'" />
-            <BarChart v-if="selectedChart === 'ageGenderMesc'" />
-            <SchoolDistribuetion v-if="selectedChart === 'education'" />
-            <AgeDistributionChart v-if="selectedChart === 'age'" />
-            <CityDistributionChart v-if="selectedChart === 'city'" />
-            <EducationParticipationChart v-if="selectedChart === 'educationParticipation'" />
-            <MaritalStatusChart v-if="selectedChart === 'maritalStatus'" />
-            <PastoralParticipationChart v-if="selectedChart === 'pastoralParticipation'" />
-            <RegistrationOverTimeChart v-if="selectedChart === 'registrationOverTime'" />
-            <StateDistributionChart v-if="selectedChart === 'state'" />
+            <PieChart v-if="selectedChart === 'gender'" :filters="filters" />
+            <BarChart v-if="selectedChart === 'ageGenderMesc'" :filters="filters" />
+            <SchoolDistribuetion v-if="selectedChart === 'education'" :filters="filters" />
+            <AgeDistributionChart v-if="selectedChart === 'age'" :filters="filters" />
+            <CityDistributionChart v-if="selectedChart === 'city'" :filters="filters" />
+            <EducationParticipationChart v-if="selectedChart === 'educationParticipation'" :filters="filters" />
+            <MaritalStatusChart v-if="selectedChart === 'maritalStatus'" :filters="filters" />
+            <PastoralParticipationChart v-if="selectedChart === 'pastoralParticipation'" :filters="filters" />
+            <RegistrationOverTimeChart v-if="selectedChart === 'registrationOverTime'" :filters="filters" />
+            <StateDistributionChart v-if="selectedChart === 'state'" :filters="filters" />
           </div>
           <div v-else>
             Carregando...
@@ -64,6 +64,13 @@ import RegistrationOverTimeChart from '@/components/RegistrationOverTimeChart.vu
 import StateDistributionChart from '@/components/StateDistributionChart.vue';
 import { jsPDF } from 'jspdf';
 
+interface Filters {
+  startDate: string;
+  endDate: string;
+  paroquia: string;
+  capela: string;
+}
+
 export default defineComponent({
   name: 'ReportView',
   components: {
@@ -84,6 +91,7 @@ export default defineComponent({
   setup() {
     const chartsLoaded = ref(false);
     const selectedChart = ref('');
+    const filters = ref<Filters>({ startDate: '', endDate: '', paroquia: '', capela: '' });
 
     const loadChart = async () => {
       try {
@@ -94,6 +102,11 @@ export default defineComponent({
         console.error("Failed to load chart:", error);
         chartsLoaded.value = false;
       }
+    };
+
+    const updateFilters = (newFilters: Filters) => {
+      filters.value = newFilters;
+      loadChart();
     };
 
     const downloadReport = () => {
@@ -110,6 +123,8 @@ export default defineComponent({
     return {
       chartsLoaded,
       selectedChart,
+      filters,
+      updateFilters,
       loadChart,
       downloadReport
     };

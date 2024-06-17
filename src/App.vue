@@ -1,6 +1,22 @@
 <template>
- <router-view/>
+  <div id="app">
+    <!-- <nav>
+      <router-link to="/">Home</router-link>
+      <router-link to="/dashboard">Dashboard</router-link>
+      <router-link to="/report">Report</router-link>
+      <router-link to="/add-mesc">Add MESC</router-link>
+      <router-link to="/list-mesc">List MESC</router-link>
+      <router-link to="/see-profile">Profile</router-link>
+    </nav> -->
+    <router-view/>
+  </div>
 </template>
+
+<script>
+export default {
+  name: 'App'
+};
+</script>
 
 <style lang="scss">
 #app {
