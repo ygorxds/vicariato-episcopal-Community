@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
+import { defineComponent, ref, reactive, onMounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 import PieChart from '../components/PieChart.vue';
@@ -47,6 +47,7 @@ import PastoralParticipationChart from '@/components/PastoralParticipationChart.
 import RegistrationOverTimeChart from '@/components/RegistrationOverTimeChart.vue';
 import StateDistributionChart from '@/components/StateDistributionChart.vue';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface Filters {
   startDate: string;
@@ -100,11 +101,28 @@ export default defineComponent({
       loadChart();
     };
 
-    const downloadReport = () => {
-      const pdf = new jsPDF();
-      pdf.text("Relatório de Análise", 10, 10);
-      pdf.text("Aqui você pode colocar mais textos e dados", 10, 20);
-      pdf.save('Relatório.pdf');
+    const downloadReport = async () => {
+      const dashboardElement = document.querySelector('.content-area') as HTMLElement;
+
+      if (dashboardElement) {
+        const canvas = await html2canvas(dashboardElement, {
+          scale: 2, // Aumenta a resolução do canvas
+          useCORS: true // Resolve problemas de CORS, caso haja imagens externas
+        });
+
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'px',
+          format: [canvas.width, canvas.height]
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('Relatório.pdf');
+      }
     };
 
     onMounted(loadChart);

@@ -3,7 +3,7 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
-      <DateFilter />
+      <!-- <DateFilter /> -->
       <div class="table-container">
         <h1>Lista de Mescs</h1>
         <table>
@@ -31,7 +31,10 @@
           </tbody>
         </table>
       </div>
-      <button class="download-report" @click="downloadReport">Baixar Relatório</button>
+      <div class="download-buttons">
+        <button class="download-report" @click="downloadXLSX"><i class="fas fa-file-excel"></i> Baixar XLSX</button>
+        <button class="download-report" @click="downloadCSV"><i class="fas fa-file-csv"></i> Baixar CSV</button>
+      </div>
     </div>
   </div>
 </template>
@@ -40,10 +43,9 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import * as XLSX from 'xlsx';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
-import DateFilter from '../components/DateFilter.vue';
-import { jsPDF } from 'jspdf';
 
 interface Mesc {
   id: number;
@@ -62,7 +64,7 @@ export default defineComponent({
   components: {
     SidebarMenu,
     UserHeader,
-    DateFilter
+    // DateFilter
   },
   setup() {
     const mescs = ref<Mesc[]>([]);
@@ -130,13 +132,31 @@ export default defineComponent({
       }
     };
 
-    const downloadReport = () => {
-      const pdf = new jsPDF();
-      pdf.text("Relatório de MESCs", 10, 10);
-      mescs.value.forEach((mesc, index) => {
-        pdf.text(`${mesc.nome} - ${mesc.cpf} - ${getParoquiaNome(mesc.paroqId)}`, 10, 20 + (index * 10));
-      });
-      pdf.save('Relatório_MESCs.pdf');
+    const downloadXLSX = () => {
+      const worksheet = XLSX.utils.json_to_sheet(mescs.value.map(mesc => ({
+        Nome: mesc.nome,
+        CPF: mesc.cpf,
+        Paróquia: getParoquiaNome(mesc.paroqId)
+      })));
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'MESCs');
+      XLSX.writeFile(workbook, 'Relatório_MESCs.xlsx');
+    };
+
+    const downloadCSV = () => {
+      const rows = mescs.value.map(mesc => [
+        mesc.nome,
+        mesc.cpf,
+        getParoquiaNome(mesc.paroqId)
+      ]);
+      const csvContent = "data:text/csv;charset=utf-8,"
+        + ["Nome,CPF,Paróquia", ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Relatório_MESCs.csv");
+      document.body.appendChild(link); // Required for FF
+      link.click();
     };
 
     onMounted(() => {
@@ -150,7 +170,8 @@ export default defineComponent({
       getParoquiaNome,
       viewMesc,
       deleteMesc,
-      downloadReport
+      downloadXLSX,
+      downloadCSV
     };
   }
 });
@@ -220,9 +241,15 @@ th {
   color: #000;
 }
 
+.download-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+}
+
 .download-report {
   cursor: pointer;
-  margin: 20px auto;
   display: block;
   padding: 10px 20px;
   background-color: #820000;
