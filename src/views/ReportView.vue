@@ -12,12 +12,9 @@
           <option value="BarChart">Qtd. de Mesc X Idade X Gênero</option>
           <option value="SchoolDistribution">Escolaridade</option>
           <option value="AgeDistributionChart">Idade</option>
-          <option value="CityDistributionChart">Município do RJ</option>
           <option value="EducationParticipationChart">Escolaridade e Participação</option>
           <option value="MaritalStatusChart">Estado Civil</option>
           <option value="PastoralParticipationChart">Participação em Movimentos Pastorais</option>
-          <option value="RegistrationOverTimeChart">Cadastro ao Longo do Tempo</option>
-          <option value="StateDistributionChart">Estado (UF)</option>
         </select>
       </div>
       <div class="chart-display-area">

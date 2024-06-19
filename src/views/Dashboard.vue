@@ -3,45 +3,39 @@
     <SidebarMenu />
     <div class="content-area">
       <UserHeader />
-      <DateFilter />
-      <div v-if="chartsLoaded" class="charts-container">
-        <div class="chart">
-          <PieChart />
+      <DateFilter @filtersUpdated="updateFilters" />
+      <div class="charts-container">
+        <div class="chart" v-if="chartsLoaded">
+          <PieChart :filters="filters" />
         </div>
-        <div class="chart">
-          <BarChart />
+        <div class="chart" v-if="chartsLoaded">
+          <BarChart :filters="filters" />
         </div>
-        <div class="chart">
-          <SchoolDistribuetion />
+        <div class="chart" v-if="chartsLoaded">
+          <AgeDistributionChart :filters="filters" />
         </div>
-        <div class="chart">
-          <CityDistributionChart />
+        <div class="chart" v-if="chartsLoaded">
+          <SchoolDistribution :filters="filters" />
         </div>
-        <div class="chart">
-          <EducationParticipationChart />
+        <div class="chart" v-if="chartsLoaded">
+          <EducationParticipationChart :filters="filters" />
         </div>
-        <div class="chart">
-          <MaritalStatusChart />
+        <div class="chart" v-if="chartsLoaded">
+          <MaritalStatusChart :filters="filters" />
         </div>
-        <div class="chart">
-          <PastoralParticipationChart />
+        <div class="chart" v-if="chartsLoaded">
+          <PastoralParticipationChart :filters="filters" />
         </div>
-        <div class="chart">
-          <RegistrationOverTimeChart />
+        <div v-else>
+          Carregando Gráficos...
         </div>
-        <div class="chart">
-          <StateDistributionChart />
-        </div>
-      </div>
-      <div v-else>
-        Carregando Gráficos...
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
+import { defineComponent, ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import SidebarMenu from '../components/SidebarMenu.vue';
@@ -49,51 +43,48 @@ import UserHeader from '../components/Header.vue';
 import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
 import DateFilter from '../components/DateFilter.vue';
-import SchoolDistribuetion from '../components/SchoolDistribuetion.vue';
-import CityDistributionChart from '@/components/CityDistributionChart.vue';
+import SchoolDistribution from '@/components/SchoolDistribuetion.vue';
+import AgeDistributionChart from '@/components/AgeDistributionChart.vue';
 import EducationParticipationChart from '@/components/EducationParticipationChart.vue';
 import MaritalStatusChart from '@/components/MaritalStatusChart.vue';
 import PastoralParticipationChart from '@/components/PastoralParticipationChart.vue';
-import RegistrationOverTimeChart from '@/components/RegistrationOverTimeChart.vue';
-import StateDistributionChart from '@/components/StateDistributionChart.vue';
+
+interface Filters {
+  startDate: string;
+  endDate: string;
+  paroquia: string;
+  capela: string;
+}
 
 export default defineComponent({
-  name: 'UserDashboard',
+  name: 'DashboardView',
   components: {
     SidebarMenu,
     UserHeader,
+    PieChart,
     BarChart,
     DateFilter,
-    PieChart,
-    SchoolDistribuetion,
-    CityDistributionChart,
+    SchoolDistribution,
+    AgeDistributionChart,
     EducationParticipationChart,
     MaritalStatusChart,
     PastoralParticipationChart,
-    RegistrationOverTimeChart,
-    StateDistributionChart
   },
   setup() {
     const chartsLoaded = ref(false);
+    const filters = reactive<Filters>({ startDate: '', endDate: '', paroquia: '', capela: '' });
     const router = useRouter();
 
-    // Função para simular o carregamento de dados dos gráficos
     const loadCharts = async () => {
-      try {
-        // Simulando a busca de dados com um delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        chartsLoaded.value = true;
-      } catch (error) {
-        console.error("Failed to load charts:", error);
-        chartsLoaded.value = false;
-      }
+      chartsLoaded.value = false;
+      // Simulate fetching data
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      chartsLoaded.value = true;
     };
 
-    // Função chamada quando a página é redimensionada
-    const onResize = async () => {
-      console.log("Redimensionando a página, recarregando os gráficos...");
-      chartsLoaded.value = false; // primeiro, definir como não carregado
-      await loadCharts(); // então recarregar os gráficos
+    const updateFilters = (newFilters: Filters) => {
+      Object.assign(filters, newFilters);
+      loadCharts();
     };
 
     onMounted(() => {
@@ -101,21 +92,14 @@ export default defineComponent({
       if (!token) {
         router.push('/login');
       }
-
-      // Configurar axios para usar o token
       axios.defaults.headers.common['x-access-token'] = token;
-
-      // Carregar os gráficos
       loadCharts();
-      window.addEventListener('resize', onResize);
-    });
-
-    onUnmounted(() => {
-      window.removeEventListener('resize', onResize);
     });
 
     return {
-      chartsLoaded
+      chartsLoaded,
+      filters,
+      updateFilters,
     };
   }
 });
