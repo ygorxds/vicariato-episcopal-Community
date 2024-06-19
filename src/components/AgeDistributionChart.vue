@@ -1,7 +1,9 @@
 <template>
   <div ref="canvasWrapper">
     <h1 style="color: #777777;">Distribuição por Idade</h1>
-    <canvas ref="ageDistributionChartCanvas"></canvas>
+    <!-- Condicional para renderizar o canvas apenas se hasData for verdadeiro -->
+    <canvas v-if="hasData" ref="ageDistributionChartCanvas"></canvas>
+    <h3 v-else>Não há dados para exibir</h3>
   </div>
 </template>
 
@@ -19,7 +21,7 @@ export default {
   },
   watch: {
     filters: {
-      deep: true,  // Ativa a observação profunda
+      deep: true,
       immediate: true,
       handler(newFilters) {
         this.fetchDataAndCreateChart(newFilters);
@@ -28,65 +30,80 @@ export default {
   },
   data() {
     return {
-      ageChart: null, // Guarda a instância do gráfico para poder destruí-lo/recriá-lo
+      ageChart: null,  // Referência ao gráfico para gestão de estado
+      hasData: false   // Flag para controlar a exibição do gráfico ou da mensagem
     };
   },
   mounted() {
-    this.fetchDataAndCreateChart(this.filters);  // Certifica-se de carregar dados inicialmente
+    // Chama a função de busca de dados ao montar o componente
+    this.fetchDataAndCreateChart(this.filters);
   },
   methods: {
     async fetchDataAndCreateChart(filters) {
+      const safeFilters = JSON.parse(JSON.stringify(filters)); // Clona os filtros para evitar problemas com reatividade
       try {
-        const response = await axios.post('http://localhost:5000/api/dados/idade', filters);
+        const response = await axios.post('http://localhost:5000/api/dados/idade', safeFilters);
         const data = response.data;
         if (data && data.length) {
-          this.createAgeDistributionChart(data);
+          this.hasData = true;
+          this.$nextTick(() => {
+            this.createAgeDistributionChart(data);
+          });
         } else {
+          this.hasData = false;
+          if (this.ageChart) {
+            this.ageChart.destroy();
+            this.ageChart = null;
+          }
           console.error('Nenhum dado para exibir.');
         }
       } catch (error) {
         console.error('Erro ao buscar dados:', error);
+        this.hasData = false;
       }
     },
     createAgeDistributionChart(data) {
-      const colors = ["#42A5F5", "#66BB6A", "#FFA726"];  // Cores para cada faixa de idade
-      const datasets = data.map((item, index) => ({
-        label: item.AgeGroup,
-        backgroundColor: colors[index],
-        data: [item.Count]  // Dados como um array com um único valor para cada barra
-      }));
-      const ctx = this.$refs.ageDistributionChartCanvas.getContext('2d');
-
-      // Destruir o gráfico existente se ele já existe
-      if (this.ageChart) {
-        this.ageChart.destroy();
-      }
-
-      // Criar um novo gráfico
-      this.ageChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Distribuição por Idade'],
-          datasets: datasets
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: true,
-            position: 'top'
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }],
-            xAxes: [{
-              barPercentage: 0.4
-            }]
-          }
+      this.$nextTick(() => {
+        const canvas = this.$refs.ageDistributionChartCanvas;
+        if (!canvas) {
+          console.error('Canvas não está disponível');
+          return;
         }
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          console.error('Contexto do Canvas não está disponível');
+          return;
+        }
+        if (this.ageChart) {
+          this.ageChart.destroy();
+        }
+        this.ageChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Distribuição por Idade'],
+            datasets: data.map((item, index) => ({
+              label: item.AgeGroup,
+              backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726"][index % 3],
+              data: [item.Count],
+              barPercentage: 0.4
+            }))
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: true,
+              position: 'top'
+            },
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
       });
     }
   }
@@ -94,5 +111,5 @@ export default {
 </script>
 
 <style scoped>
-/* Seus estilos específicos aqui */
+/* Estilos específicos para o componente */
 </style>

@@ -6,39 +6,26 @@
       <DateFilter @filtersUpdated="updateFilters" />
       <div class="selector-container">
         <label for="chartType"><b>Selecione o tipo de análise:</b></label>
-        <select class="selectChoose" v-model="selectedChart" @change="loadChart">
+        <select id="chartType" class="selectChoose" v-model="selectedChart">
           <option value="">Nenhum</option>
-          <option value="gender">Gênero</option>
-          <option value="ageGenderMesc">Qtd. de Mesc X Idade X Gênero</option>
-          <option value="education">Escolaridade</option>
-          <option value="age">Idade</option>
-          <option value="city">Município do RJ</option>
-          <option value="educationParticipation">Escolaridade e Participação</option>
-          <option value="maritalStatus">Estado Civil</option>
-          <option value="pastoralParticipation">Participação em Movimentos Pastorais</option>
-          <option value="registrationOverTime">Cadastro ao Longo do Tempo</option>
-          <option value="state">Estado (UF)</option>
+          <option value="PieChart">Gênero</option>
+          <option value="BarChart">Qtd. de Mesc X Idade X Gênero</option>
+          <option value="SchoolDistribution">Escolaridade</option>
+          <option value="AgeDistributionChart">Idade</option>
+          <option value="CityDistributionChart">Município do RJ</option>
+          <option value="EducationParticipationChart">Escolaridade e Participação</option>
+          <option value="MaritalStatusChart">Estado Civil</option>
+          <option value="PastoralParticipationChart">Participação em Movimentos Pastorais</option>
+          <option value="RegistrationOverTimeChart">Cadastro ao Longo do Tempo</option>
+          <option value="StateDistributionChart">Estado (UF)</option>
         </select>
       </div>
       <div class="chart-display-area">
-        <div v-if="selectedChart">
-          <div v-if="chartsLoaded" class="charts-container">
-            <PieChart v-if="selectedChart === 'gender'" :filters="filters" />
-            <BarChart v-if="selectedChart === 'ageGenderMesc'" :filters="filters" />
-            <SchoolDistribuetion v-if="selectedChart === 'education'" :filters="filters" />
-            <AgeDistributionChart v-if="selectedChart === 'age'" :filters="filters" />
-            <CityDistributionChart v-if="selectedChart === 'city'" :filters="filters" />
-            <EducationParticipationChart v-if="selectedChart === 'educationParticipation'" :filters="filters" />
-            <MaritalStatusChart v-if="selectedChart === 'maritalStatus'" :filters="filters" />
-            <PastoralParticipationChart v-if="selectedChart === 'pastoralParticipation'" :filters="filters" />
-            <RegistrationOverTimeChart v-if="selectedChart === 'registrationOverTime'" :filters="filters" />
-            <StateDistributionChart v-if="selectedChart === 'state'" :filters="filters" />
-          </div>
-          <div v-else>
-            Carregando...
-          </div>
+        <component :is="chartComponents[selectedChart]" :filters="filters" v-if="selectedChart && chartsLoaded"></component>
+        <div v-if="!chartsLoaded">
+          Carregando...
         </div>
-        <div v-else>
+        <div v-else-if="!selectedChart">
           Nenhum gráfico selecionado
         </div>
       </div>
@@ -48,13 +35,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, reactive, computed, onMounted } from 'vue';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
 import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
 import DateFilter from '../components/DateFilter.vue';
-import SchoolDistribuetion from '../components/SchoolDistribuetion.vue';
+import SchoolDistribution from '../components/SchoolDistribuetion.vue';
 import AgeDistributionChart from '@/components/AgeDistributionChart.vue';
 import CityDistributionChart from '@/components/CityDistributionChart.vue';
 import EducationParticipationChart from '@/components/EducationParticipationChart.vue';
@@ -79,7 +66,7 @@ export default defineComponent({
     PieChart,
     BarChart,
     DateFilter,
-    SchoolDistribuetion,
+    SchoolDistribution,
     AgeDistributionChart,
     CityDistributionChart,
     EducationParticipationChart,
@@ -91,21 +78,28 @@ export default defineComponent({
   setup() {
     const chartsLoaded = ref(false);
     const selectedChart = ref('');
-    const filters = ref<Filters>({ startDate: '', endDate: '', paroquia: '', capela: '' });
+    const filters = reactive<Filters>({ startDate: '', endDate: '', paroquia: '', capela: '' });
+    const chartComponents = {
+      PieChart,
+      BarChart,
+      SchoolDistribution,
+      AgeDistributionChart,
+      CityDistributionChart,
+      EducationParticipationChart,
+      MaritalStatusChart,
+      PastoralParticipationChart,
+      RegistrationOverTimeChart,
+      StateDistributionChart
+    };
 
     const loadChart = async () => {
-      try {
-        // Simulate loading of chart data
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        chartsLoaded.value = true;
-      } catch (error) {
-        console.error("Failed to load chart:", error);
-        chartsLoaded.value = false;
-      }
+      chartsLoaded.value = false;
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate chart data loading
+      chartsLoaded.value = true;
     };
 
     const updateFilters = (newFilters: Filters) => {
-      filters.value = newFilters;
+      Object.assign(filters, newFilters);
       loadChart();
     };
 
@@ -116,9 +110,7 @@ export default defineComponent({
       pdf.save('Relatório.pdf');
     };
 
-    onMounted(() => {
-      loadChart();
-    });
+    onMounted(loadChart);
 
     return {
       chartsLoaded,
@@ -126,7 +118,8 @@ export default defineComponent({
       filters,
       updateFilters,
       loadChart,
-      downloadReport
+      downloadReport,
+      chartComponents,
     };
   }
 });
