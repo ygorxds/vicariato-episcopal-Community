@@ -45,7 +45,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:5000/api/dados/mescsParticipamDeOutrasPastorais', filters);
+        const response = await axios.post('http://localhost:5000/api/dados/pastoraisDosMescs', filters);
         const data = response.data;
         if (data && data.length) {
           this.hasData = true;
