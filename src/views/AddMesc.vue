@@ -266,7 +266,7 @@ export default defineComponent({
 
     const fetchParoquias = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/paroquia/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`);
         paroquias.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar paróquias:', error);
@@ -276,7 +276,7 @@ export default defineComponent({
 
     const fetchCapelas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/capela/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/capela/listar`);
         capelas.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar capelas:', error);
@@ -371,7 +371,7 @@ export default defineComponent({
       }
 
       try {
-        const response = await axios.post('http://localhost:5000/api/mesc/criarMesc', formData.value, {
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/mesc/criarMesc`, formData.value, {
           headers: {
             'x-access-token': token
           }

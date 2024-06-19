@@ -49,7 +49,7 @@ export default {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('http://localhost:5000/api/user/myData', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/user/myData`, {
             headers: {
               'x-access-token': token
             }

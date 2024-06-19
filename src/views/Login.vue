@@ -38,7 +38,7 @@ export default defineComponent({
 
     const login = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/api/user/login', {
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/user/login`, {
           email: email.value,
           senha: password.value
         });

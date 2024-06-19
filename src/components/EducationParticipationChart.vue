@@ -45,7 +45,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:5000/api/dados/escolaridadePorMovimento', filters);
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/dados/escolaridadePorMovimento`, filters);
         const data = response.data;
         if (data && data.length) {
           this.hasData = true;

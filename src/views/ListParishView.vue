@@ -74,7 +74,7 @@ export default defineComponent({
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/paroquia/listar', {
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`, {
           headers: {
             'x-access-token': token
           }
@@ -99,7 +99,7 @@ export default defineComponent({
       }
 
       try {
-        await axios.delete(`http://localhost:5000/api/paroquia/deletar/${id}`, {
+        await axios.delete(`${process.env.VUE_APP_API_URL}/api/paroquia/deletar/${id}`, {
           headers: {
             'x-access-token': token
           }

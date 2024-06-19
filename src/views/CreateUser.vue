@@ -73,7 +73,7 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/api/user/register', formData.value);
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/user/register`, formData.value);
         alert('Usuário registrado com sucesso!');
         console.log('Dados enviados:', response.data);
         // Redirecionar ou limpar o formulário após o registro

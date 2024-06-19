@@ -42,7 +42,7 @@ export default {
     async fetchDataAndCreateChart(filters) {
       const safeFilters = JSON.parse(JSON.stringify(filters)); // Clona os filtros para evitar problemas com reatividade
       try {
-        const response = await axios.post('http://localhost:5000/api/dados/idade', safeFilters);
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/dados/idade`, safeFilters);
         const data = response.data;
         if (data && data.length) {
           this.hasData = true;

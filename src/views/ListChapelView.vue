@@ -83,7 +83,7 @@
         }
   
         try {
-          const response = await axios.get('http://localhost:5000/api/capela/listar', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/capela/listar`, {
             headers: {
               'x-access-token': token
             }
@@ -103,7 +103,7 @@
         }
   
         try {
-          const response = await axios.get('http://localhost:5000/api/paroquia/listar', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`, {
             headers: {
               'x-access-token': token
             }
@@ -132,7 +132,7 @@
         }
   
         try {
-          await axios.delete(`http://localhost:5000/api/capela/deletar/${id}`, {
+          await axios.delete(`${process.env.VUE_APP_API_URL}/api/capela/deletar/${id}`, {
             headers: {
               'x-access-token': token
             }

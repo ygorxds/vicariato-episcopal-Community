@@ -90,7 +90,7 @@
         }
   
         try {
-          const response = await axios.get(`http://localhost:5000/api/capela/ver/${id}`, {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/capela/ver/${id}`, {
             headers: {
               'x-access-token': token
             }
@@ -110,7 +110,7 @@
         }
   
         try {
-          const response = await axios.get('http://localhost:5000/api/paroquia/listar', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`, {
             headers: {
               'x-access-token': token
             }
@@ -131,7 +131,7 @@
         }
   
         try {
-          await axios.put(`http://localhost:5000/api/capela/editar/${id}`, formData.value, {
+          await axios.put(`${process.env.VUE_APP_API_URL}/api/capela/editar/${id}`, formData.value, {
             headers: {
               'x-access-token': token
             }

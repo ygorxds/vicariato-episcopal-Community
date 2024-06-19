@@ -72,7 +72,7 @@
         }
   
         try {
-          const response = await axios.get('http://localhost:5000/api/paroquia/listar', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`, {
             headers: {
               'x-access-token': token
             }
@@ -92,7 +92,7 @@
         }
   
         try {
-          const response = await axios.post('http://localhost:5000/api/capela/criar', formData.value, {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/capela/criar`, formData.value, {
             headers: {
               'x-access-token': token
             }

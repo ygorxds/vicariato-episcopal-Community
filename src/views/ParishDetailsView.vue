@@ -70,7 +70,7 @@
         }
   
         try {
-          const response = await axios.get(`http://localhost:5000/api/paroquia/ver/${paroquiaId}`, {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/ver/${paroquiaId}`, {
             headers: {
               'x-access-token': token
             }

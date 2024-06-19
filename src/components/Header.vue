@@ -46,7 +46,7 @@ export default defineComponent({
   if (token) {
     try {
       console.log('Fetching user name with token:', token); // Adicione este log
-      const response = await axios.get('http://localhost:5000/api/user/me', {
+      const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/user/me`, {
         headers: {
           'x-access-token': token
         }

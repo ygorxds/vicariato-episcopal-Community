@@ -69,7 +69,7 @@ export default defineComponent({
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('http://localhost:5000/api/user/userData', {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/user/userData`, {
             headers: {
               'x-access-token': token
             }
@@ -99,7 +99,7 @@ export default defineComponent({
       if (token) {
         try {
           const updatedData = { ...formData.value, statusConta: statusConta.value };
-          await axios.put('http://localhost:5000/api/user/update', updatedData, {
+          await axios.put(`${process.env.VUE_APP_API_URL}/api/user/update`, updatedData, {
             headers: {
               'x-access-token': token
             }

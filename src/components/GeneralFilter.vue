@@ -66,7 +66,7 @@ export default {
     },
     async fetchParoquias() {
       try {
-        const response = await axios.get('http://localhost:5000/api/paroquia/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`);
         this.paroquias = response.data;
       } catch (error) {
         console.error('Erro ao buscar paróquias:', error);
@@ -74,7 +74,7 @@ export default {
     },
     async fetchCapelas() {
       try {
-        const response = await axios.get('http://localhost:5000/api/capela/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/capela/listar`);
         this.capelas = response.data;
       } catch (error) {
         console.error('Erro ao buscar capelas:', error);

@@ -332,7 +332,7 @@ export default defineComponent({
         const mescId = localStorage.getItem('mescId');
         const updateData = { ...formData.value };
 
-        await axios.put(`http://localhost:5000/api/mesc/editarMesc/${mescId}`, updateData, {
+        await axios.put(`${process.env.VUE_APP_API_URL}/api/mesc/editarMesc/${mescId}`, updateData, {
           headers: {
             'x-access-token': localStorage.getItem('token')
           }
@@ -352,7 +352,7 @@ export default defineComponent({
       const mescId = localStorage.getItem('mescId');
       if (mescId) {
         try {
-          const response = await axios.get(`http://localhost:5000/api/mesc/verDadosDoMesc/${mescId}`, {
+          const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/mesc/verDadosDoMesc/${mescId}`, {
             headers: {
               'x-access-token': localStorage.getItem('token')
             }
@@ -372,7 +372,7 @@ export default defineComponent({
 
     const fetchParoquias = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/paroquia/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/paroquia/listar`);
         paroquias.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar paróquias:', error);
@@ -381,7 +381,7 @@ export default defineComponent({
 
     const fetchCapelas = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/capela/listar');
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/capela/listar`);
         capelas.value = response.data;
       } catch (error) {
         console.error('Erro ao buscar capelas:', error);

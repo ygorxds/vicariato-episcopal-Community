@@ -48,7 +48,7 @@
         const token = localStorage.getItem('token');
         if (token) {
           try {
-            const response = await axios.get('http://localhost:5000/api/user/myData', {
+            const response = await axios.get(`${process.env.VUE_APP_API_URL}/api/user/myData`, {
               headers: {
                 'x-access-token': token
               }
@@ -77,7 +77,7 @@
         if (userConfirmed) {
           const token = localStorage.getItem('token');
           try {
-            const response = await axios.delete('http://localhost:5000/api/parish/delete', {
+            const response = await axios.delete(`${process.env.VUE_APP_API_URL}/api/parish/delete`, {
               headers: {
                 'x-access-token': token
               }
@@ -104,7 +104,7 @@
         if (userConfirmed) {
           const token = localStorage.getItem('token');
           try {
-            const response = await axios.delete('http://localhost:5000/api/chapel/delete', {
+            const response = await axios.delete(`${process.env.VUE_APP_API_URL}/api/chapel/delete`, {
               headers: {
                 'x-access-token': token
               }

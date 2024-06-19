@@ -62,7 +62,7 @@
         }
   
         try {
-          const response = await axios.post('http://localhost:5000/api/paroquia/criar', formData.value, {
+          const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/paroquia/criar`, formData.value, {
             headers: {
               'x-access-token': token
             }
