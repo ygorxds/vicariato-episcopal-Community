@@ -25,6 +25,8 @@ import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
+
+
 export default defineComponent({
   name: 'UserLogin',
   setup() {
@@ -42,6 +44,7 @@ export default defineComponent({
           email: email.value,
           senha: password.value
         });
+
 
         const { token } = response.data;
         localStorage.setItem('token', token);
