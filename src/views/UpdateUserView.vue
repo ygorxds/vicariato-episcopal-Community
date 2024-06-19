@@ -31,14 +31,6 @@
           <input type="date" id="dataNascimento" v-model="formData.dataNascimento" required>
         </div>
         <div class="form-row">
-          <label for="statusConta">Status da conta:</label>
-          <select id="statusConta" v-model="formData.statusConta" required>
-            <option disabled value="">Selecione o status</option>
-            <option value="coordenador">Coordenador</option>
-            <option value="secretaria">Secretaria</option>
-          </select>
-        </div>
-        <div class="form-row">
           <label for="senha">Nova Senha (deixe em branco se não quiser mudar):</label>
           <input type="password" id="senha" v-model="formData.senha">
         </div>
@@ -68,15 +60,15 @@ export default defineComponent({
       email: '',
       telefone: '',
       dataNascimento: '',
-      statusConta: '',
       senha: ''
     });
+
+    const statusConta = ref(''); // Mantém a hierarquia do usuário separadamente
 
     const fetchUserData = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          console.log('Fetching user data with token:', token); // Adicione este log
           const response = await axios.get('http://localhost:5000/api/user/userData', {
             headers: {
               'x-access-token': token
@@ -88,12 +80,11 @@ export default defineComponent({
             genero: userData.genero,
             email: userData.email,
             telefone: userData.telefone,
-            dataNascimento: userData.dataNascimento.slice(0, 10), // Garantir que o formato da data está correto
-            statusConta: userData.statusConta,
+            dataNascimento: userData.dataNascimento.slice(0, 10),
             senha: ''
           };
-          // Salvar os dados no localStorage
-          localStorage.setItem('userData', JSON.stringify(formData.value));
+          statusConta.value = userData.statusConta;
+          localStorage.setItem('userData', JSON.stringify({ ...formData.value, statusConta: statusConta.value }));
         } catch (error) {
           console.error('Erro ao buscar os dados do usuário:', error);
           alert('Erro ao buscar os dados do usuário.');
@@ -107,16 +98,15 @@ export default defineComponent({
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          console.log('Submitting user data with token:', token); // Adicione este log
-          await axios.put('http://localhost:5000/api/user/update', formData.value, {
+          const updatedData = { ...formData.value, statusConta: statusConta.value };
+          await axios.put('http://localhost:5000/api/user/update', updatedData, {
             headers: {
               'x-access-token': token
             }
           });
           alert('Usuário atualizado com sucesso!');
           router.push('/see-profile');
-          // Atualizar os dados no localStorage
-          localStorage.setItem('userData', JSON.stringify(formData.value));
+          localStorage.setItem('userData', JSON.stringify(updatedData));
         } catch (error) {
           console.error('Erro ao atualizar o usuário:', error);
           alert('Erro ao atualizar o usuário. Tente novamente.');
@@ -129,7 +119,9 @@ export default defineComponent({
     onMounted(() => {
       const storedUserData = localStorage.getItem('userData');
       if (storedUserData) {
-        formData.value = JSON.parse(storedUserData);
+        const parsedData = JSON.parse(storedUserData);
+        formData.value = parsedData;
+        statusConta.value = parsedData.statusConta;
       } else {
         fetchUserData();
       }

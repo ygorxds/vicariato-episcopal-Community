@@ -15,6 +15,8 @@
         <option value="">Selecione</option>
         <option v-for="capela in filteredCapelas" :key="capela.id" :value="capela.id">{{ capela.nome }}</option>
       </select>
+      <button class="clear-btn" @click="clearFilters">Limpar</button>
+      <button class="apply-btn" @click="applyFilters">Aplicar</button>
     </div>
   </div>
 </template>
@@ -41,10 +43,26 @@ export default {
       } else {
         this.filteredCapelas = [];
       }
-      this.$emit('paroquiaSelected', this.selectedParoquia);
     },
     handleCapelaChange() {
-      this.$emit('capelaSelected', this.selectedCapela);
+      // This method is no longer emitting an event directly
+    },
+    applyFilters() {
+      this.$emit('filtersUpdated', {
+        paroquia: this.selectedParoquia,
+        capela: this.selectedCapela
+      });
+      this.$emit('close')
+    },
+    clearFilters() {
+      this.selectedParoquia = '';
+      this.selectedCapela = '';
+      this.filteredCapelas = [];
+      this.$emit('filtersUpdated', {
+        paroquia: '',
+        capela: ''
+      });
+      this.$emit('close')
     },
     async fetchParoquias() {
       try {
@@ -118,5 +136,26 @@ export default {
   border: 1px solid #a4a4a4;
   border-radius: 20px;
   color: #747474;
+}
+
+.apply-btn,
+.clear-btn {
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.apply-btn {
+  background-color: #7e1203;
+  color: white;
+}
+
+.clear-btn {
+  background-color: #707070;
+  color: white;
 }
 </style>

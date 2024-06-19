@@ -7,7 +7,7 @@
         <div class="profile-container">
           <h1>Perfil do usuário</h1>
           <div class="profile-card" v-if="user">
-            <img src="@/assets/boente.png" alt="User Image" class="profile-image" />
+            <font-awesome-icon icon="user" class="profile-icon" />
             <div class="profile-details">
               <p><strong>Nome:</strong> <span class="highlight">{{ user.nome }}</span></p>
               <p><strong>Idade:</strong> <span class="highlight">{{ idade }} anos</span></p>
@@ -15,7 +15,7 @@
               <p><strong>Status:</strong> {{ user.statusConta }}</p>
             </div>
             <button class="update-button" @click="goToUpdateUserPage">Atualizar meus dados</button>
-            <button style="margin-left: 10px;" class="update-button" @click="goToNewUserPage">+</button>
+            <button v-if="user.statusConta === 'coordenador'" style="margin-left: 10px;" class="update-button" @click="goToNewUserPage">+</button>
             <button style="margin-left: 10px;" class="update-button" @click="goToDeleteMyProfile">Deletar minha conta</button>
           </div>
           <div v-else>
@@ -33,12 +33,14 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import SidebarMenu from '../components/SidebarMenu.vue';
 import UserHeader from '../components/Header.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default defineComponent({
   name: 'UserProfile',
   components: {
     SidebarMenu,
-    UserHeader
+    UserHeader,
+    FontAwesomeIcon
   },
   setup() {
     const router = useRouter();
@@ -159,10 +161,9 @@ export default defineComponent({
   width: 100%;
 }
 
-.profile-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+.profile-icon {
+  font-size: 100px;
+  color: #750303;
   margin-bottom: 20px;
 }
 

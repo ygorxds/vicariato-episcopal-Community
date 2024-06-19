@@ -16,6 +16,16 @@
           <span v-if="errors.dataNascimento" class="error">{{ errors.dataNascimento }}</span>
         </div>
         <div class="form-row">
+          <label for="genero">Gênero:</label>
+          <select id="genero" v-model="formData.genero" required>
+            <option disabled value="">Selecione o gênero</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+            <option value="outro">Outro</option>
+          </select>
+          <span v-if="errors.genero" class="error">{{ errors.genero }}</span>
+        </div>
+        <div class="form-row">
           <label for="mae">Nome da Mãe:</label>
           <input type="text" id="mae" v-model="formData.mae" />
           <span v-if="errors.mae" class="error">{{ errors.mae }}</span>
@@ -221,6 +231,7 @@ export default defineComponent({
     const formData = ref({
       nome: '',
       dataNascimento: '',
+      genero: '', // Adicionando o campo genero
       mae: '',
       pai: '',
       identidade: '',
@@ -326,6 +337,7 @@ export default defineComponent({
 
       if (!formData.value.nome) errors.value.nome = 'Nome é obrigatório';
       if (!formData.value.dataNascimento) errors.value.dataNascimento = 'Data de nascimento é obrigatória';
+      if (!formData.value.genero) errors.value.genero = 'Gênero é obrigatório';
       if (!formData.value.identidade) errors.value.identidade = 'Identidade é obrigatória';
       if (!formData.value.orgaoEmissor) errors.value.orgaoEmissor = 'Órgão emissor é obrigatório';
       if (!formData.value.dataExpedicao) errors.value.dataExpedicao = 'Data de expedição é obrigatória';
